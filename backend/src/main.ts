@@ -1,8 +1,8 @@
-import express from 'express';
-import { __DEV__, HOST, PORT, PROD_CORS_ORIGIN } from './constant';
-import morgan from 'morgan';
 import cors from 'cors';
-import { dbMigration } from './libs/db/migration';
+import express from 'express';
+import morgan from 'morgan';
+import { __DEV__, HOST, PORT, PROD_CORS_ORIGIN } from './constant';
+import { apiRouter } from './routes';
 
 const main = async () => {
   const app = express();
@@ -30,9 +30,8 @@ const main = async () => {
     console.warn('Production CORS origin not set, defaulting to no CORS.');
   }
 
-  app.get('/', (_, res) => {
-    res.send('Welcome to flight search');
-  });
+  // Router
+  app.use('/', apiRouter);
 
   app.listen(PORT, HOST, () => {
     console.log(`Server is up and ready at ${HOST}:${PORT} 🚀🚀🚀`);

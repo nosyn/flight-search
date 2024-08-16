@@ -1,9 +1,11 @@
-import express from 'express';
-import { __DEV__, HOST, PORT, PROD_CORS_ORIGIN } from './constant';
-import morgan from 'morgan';
+import 'dotenv/config';
 import cors from 'cors';
+import express from 'express';
+import morgan from 'morgan';
+import { __DEV__, HOST, PORT, PROD_CORS_ORIGIN } from './constants';
+import { apiRouter } from './routes';
 
-const main = () => {
+const main = async () => {
   const app = express();
 
   // Middlewares
@@ -29,9 +31,8 @@ const main = () => {
     console.warn('Production CORS origin not set, defaulting to no CORS.');
   }
 
-  app.get('/', (_, res) => {
-    res.send('Welcome to flight search');
-  });
+  // Router
+  app.use('/', apiRouter);
 
   app.listen(PORT, HOST, () => {
     console.log(`Server is up and ready at ${HOST}:${PORT} 🚀🚀🚀`);

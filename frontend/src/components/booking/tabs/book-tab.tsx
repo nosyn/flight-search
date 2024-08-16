@@ -1,4 +1,4 @@
-import { RoundtripCalendar } from '@/components/booking/calendars';
+import { RoundtripCalendar } from '@/components/booking/roundtrip-calendar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
@@ -6,9 +6,7 @@ import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { CabinTypeInput } from '../inputs/cabin-type-input';
-import { LocationInput } from '../inputs/location-input';
-import { TravelersInput } from '../inputs/travelers-input';
+import { LocationInput } from '../location-input';
 
 const FormSchema = z.object({
   origin: z
@@ -29,26 +27,18 @@ const FormSchema = z.object({
       required_error: 'A flight return day is required.',
     }),
   }),
-  cabinType: z.enum(['economy', 'business']),
-  travelers: z
-    .number({
-      coerce: true,
-    })
-    .min(1, 'At least one traveler is requireddsadasd.'),
 });
 
 export const BookTab = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      origin: 'BKK',
-      destination: 'DAD',
-      cabinType: 'economy',
+      origin: '',
+      destination: '',
       date: {
         from: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
         to: new Date(new Date().getTime() + 4 * 24 * 60 * 60 * 1000),
       },
-      travelers: 1,
     },
   });
 
@@ -70,8 +60,6 @@ export const BookTab = () => {
           <CardContent className='p-4 flex flex-col gap-4'>
             <LocationInput />
             <RoundtripCalendar />
-            <TravelersInput />
-            <CabinTypeInput />
           </CardContent>
           <CardFooter className='flex justify-end'>
             <Button type='submit'>Find Flights</Button>

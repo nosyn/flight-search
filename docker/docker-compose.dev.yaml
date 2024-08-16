@@ -1,5 +1,9 @@
 name: dev-flight-search
 
+networks:
+  database:
+    driver: bridge
+
 services:
   postgresql:
     image: 'bitnami/postgresql:16.3.0'

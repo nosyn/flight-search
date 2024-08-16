@@ -1,62 +1,83 @@
-import { OneWayCalendar } from '@/components/calendars/one-way';
-import { RoundtripCalendar } from '@/components/calendars/roundtrip';
+import { RoundtripCalendar } from '@/components/booking/calendars';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@radix-ui/react-label';
-import { ArrowRightLeftIcon } from 'lucide-react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Form } from '@/components/ui/form';
+import { toast } from '@/components/ui/use-toast';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { CabinTypeInput } from '../inputs/cabin-type-input';
+import { LocationInput } from '../inputs/location-input';
+import { TravelersInput } from '../inputs/travelers-input';
+
+const FormSchema = z.object({
+  origin: z
+    .string({
+      required_error: 'Origin required',
+    })
+    .length(3, 'Incorrect origin.'),
+  destination: z
+    .string({
+      required_error: 'Destination required',
+    })
+    .length(3, 'Incorrect destination.'),
+  date: z.object({
+    from: z.date({
+      required_error: 'A flight departure day is required.',
+    }),
+    to: z.date({
+      required_error: 'A flight return day is required.',
+    }),
+  }),
+  cabinType: z.enum(['economy', 'business']),
+  travelers: z
+    .number({
+      coerce: true,
+    })
+    .min(1, 'At least one traveler is requireddsadasd.'),
+});
 
 export const BookTab = () => {
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      origin: 'BKK',
+      destination: 'DAD',
+      cabinType: 'economy',
+      date: {
+        from: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
+        to: new Date(new Date().getTime() + 4 * 24 * 60 * 60 * 1000),
+      },
+      travelers: 1,
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    toast({
+      title: 'You submitted the following values:',
+      description: (
+        <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+          <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
+
   return (
-    <Card>
-      <CardHeader>
-        <CardDescription>
-          <RadioGroup defaultValue='roundtrip'>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='default' id='r1' />
-              <Label htmlFor='r1'>Default</Label>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='roundtrip' id='r2' />
-              <Label htmlFor='r2'>Roundtrip</Label>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='one-way' id='r3' />
-              <Label htmlFor='r3'>One-way</Label>
-            </div>
-          </RadioGroup>
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className='flex space-y-1'>
-          <div className='flex-grow'>
-            <Label htmlFor='name'>From*</Label>
-          </div>
-          <div className='w-4' />
-          <div className='flex-grow'>
-            <Label htmlFor='username'>To*</Label>
-          </div>
-        </div>
-        <div className='flex items-center gap-2'>
-          <Input id='name' defaultValue='Pedro Duarte' />
-          <ArrowRightLeftIcon size={48} />
-          <Input id='username' defaultValue='@peduarte' />
-        </div>
-        <div>
-          <OneWayCalendar />
-          <RoundtripCalendar />
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button>Find Flights</Button>
-      </CardFooter>
-    </Card>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        <Card>
+          <CardContent className='p-4 flex flex-col gap-4'>
+            <LocationInput />
+            <RoundtripCalendar />
+            <TravelersInput />
+            <CabinTypeInput />
+          </CardContent>
+          <CardFooter className='flex justify-end'>
+            <Button type='submit'>Find Flights</Button>
+          </CardFooter>
+        </Card>
+      </form>
+    </Form>
   );
 };

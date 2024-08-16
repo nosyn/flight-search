@@ -33,8 +33,8 @@ export const BookTab = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      origin: 'BKK',
-      destination: 'DAD',
+      origin: '',
+      destination: '',
       date: {
         from: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
         to: new Date(new Date().getTime() + 4 * 24 * 60 * 60 * 1000),

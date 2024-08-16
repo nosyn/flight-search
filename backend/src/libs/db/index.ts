@@ -1,4 +1,4 @@
-import { DB_CONNECTION_STRING } from '../../constant';
+import { DB_CONNECTION_STRING } from '../../constants';
 import * as schema from './schema';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';

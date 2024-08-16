@@ -1,3 +1,6 @@
+import 'dotenv/config';
+
+console.log('process.env.NODE_ENV: ', process.env.NODE_ENV);
 export const __DEV__ = process.env.NODE_ENV === 'development';
 
 export const HOST = process.env.HOST || 'localhost';

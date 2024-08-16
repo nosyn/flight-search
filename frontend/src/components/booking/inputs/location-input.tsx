@@ -29,7 +29,7 @@ export function LocationInput() {
           )}
         />
       </div>
-      <div className='flex items-end w-6 flex-grow-0'>
+      <div className='mt-10'>
         <ArrowRightLeftIcon size={24} className='mb-2' />
       </div>
       <div className='flex-grow'>

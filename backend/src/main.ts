@@ -2,8 +2,9 @@ import express from 'express';
 import { __DEV__, HOST, PORT, PROD_CORS_ORIGIN } from './constant';
 import morgan from 'morgan';
 import cors from 'cors';
+import { dbMigration } from './libs/db/migration';
 
-const main = () => {
+const main = async () => {
   const app = express();
 
   // Middlewares

@@ -1,0 +1,15 @@
+name: dev-flight-search
+
+services:
+  postgresql:
+    image: 'bitnami/postgresql:16.3.0'
+    networks:
+      - database
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volumes/postgresql-persistence:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_DATABASE=flight-search-db
+      - POSTGRESQL_USERNAME=db_user
+      - POSTGRESQL_PASSWORD=db_password

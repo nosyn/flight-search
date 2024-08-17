@@ -1,17 +1,33 @@
 import { Toaster } from '@/components/ui/toaster';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BookingCard } from './components/booking/booking-card';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Layout } from './components/layout';
 
-// Create a client
-const queryClient = new QueryClient();
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { queryClient } from './lib/apis';
+import { ChooseFlightPage } from './pages/ChooseFlightPage';
+import { HomePage } from './pages/HomePage';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: 'choose-flight',
+        element: <ChooseFlightPage />,
+      },
+    ],
+  },
+]);
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Layout>
-        <BookingCard />
-      </Layout>
+      <RouterProvider router={router} />
       <Toaster />
     </QueryClientProvider>
   );

@@ -2,11 +2,12 @@ import { RoundtripCalendar } from '@/components/booking/roundtrip-calendar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { LocationInput } from '../location-input';
+import { useNavigate } from 'react-router-dom';
+import { getSearchParamsFormattedDate } from '@/lib/utils';
 
 const FormSchema = z.object({
   origin: z
@@ -41,15 +42,17 @@ export const BookTab = () => {
       },
     },
   });
+  const navigate = useNavigate();
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-          <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    navigate({
+      pathname: '/choose-flight',
+      search: new URLSearchParams({
+        origin: data.origin,
+        destination: data.destination,
+        dateFrom: getSearchParamsFormattedDate(data.date.from),
+        dateTo: getSearchParamsFormattedDate(data.date.to),
+      }).toString(),
     });
   }
 

@@ -3,7 +3,9 @@ import { API_AIRPORTS } from './constants';
 
 export const getAirports = async () => {
   try {
-    const response = await fetch(API_AIRPORTS);
+    const response = await fetch(API_AIRPORTS, {
+      credentials: 'include',
+    });
 
     if (response.ok) {
       const airports = await response.json();

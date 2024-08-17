@@ -1,6 +1,7 @@
 import { Toaster } from '@/components/ui/toaster';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BookingCard } from './components/booking/booking-card';
+import { Layout } from './components/layout';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -8,10 +9,10 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <main className='border-b-2 min-h-screen p-4'>
+      <Layout>
         <BookingCard />
-        <Toaster />
-      </main>
+      </Layout>
+      <Toaster />
     </QueryClientProvider>
   );
 }

@@ -1,6 +1,6 @@
 {
-  "id": "0e541185-6082-4e0f-9609-baff99dc2907",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "3787a144-8b5c-4f68-9339-61a48ff9ef55",
+  "prevId": "07d585d3-217c-4902-a2c3-f1b1ae321e71",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -42,14 +42,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "from_airport": {
-          "name": "from_airport",
+        "departure_airport": {
+          "name": "departure_airport",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "to_airport": {
-          "name": "to_airport",
+        "arrival_airport": {
+          "name": "arrival_airport",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -65,16 +65,22 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "flights_schedule_table_from_airport_airports_table_iata_code_fk": {
-          "name": "flights_schedule_table_from_airport_airports_table_iata_code_fk",
+        "flights_schedule_table_departure_airport_airports_table_iata_code_fk": {
+          "name": "flights_schedule_table_departure_airport_airports_table_iata_code_fk",
           "tableFrom": "flights_schedule_table",
           "tableTo": "airports_table",
           "columnsFrom": [
-            "from_airport"
+            "departure_airport"
           ],
           "columnsTo": [
             "iata_code"
@@ -82,12 +88,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "flights_schedule_table_to_airport_airports_table_iata_code_fk": {
-          "name": "flights_schedule_table_to_airport_airports_table_iata_code_fk",
+        "flights_schedule_table_arrival_airport_airports_table_iata_code_fk": {
+          "name": "flights_schedule_table_arrival_airport_airports_table_iata_code_fk",
           "tableFrom": "flights_schedule_table",
           "tableTo": "airports_table",
           "columnsFrom": [
-            "to_airport"
+            "arrival_airport"
           ],
           "columnsTo": [
             "iata_code"

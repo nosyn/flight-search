@@ -1,4 +1,5 @@
 import express, { Request, Response, Router } from 'express';
+import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
 
 // Routes
 import { airportsRouter } from './airports.route';
@@ -15,4 +16,11 @@ apiRouter.get('/health', (_req: Request, res: Response) => {
   });
 });
 
-apiRouter.use('/airports', airportsRouter);
+apiRouter.use(
+  '/airports',
+  ClerkExpressWithAuth({
+    // Add options here
+    // See the Middleware options section for more details
+  }),
+  airportsRouter
+);

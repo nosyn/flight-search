@@ -1,5 +1,5 @@
 import { defineConfig } from 'drizzle-kit';
-import { DB_CONNECTION_STRING } from './src/constant';
+import { DB_CONNECTION_STRING } from './src/constants';
 
 export default defineConfig({
   dialect: 'postgresql',

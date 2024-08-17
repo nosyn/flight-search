@@ -1,9 +1,15 @@
 import { toast } from '@/components/ui/use-toast';
 import { API_AIRPORTS } from './constants';
+import { QueryClient } from '@tanstack/react-query';
+
+// Create a client
+export const queryClient = new QueryClient();
 
 export const getAirports = async () => {
   try {
-    const response = await fetch(API_AIRPORTS);
+    const response = await fetch(API_AIRPORTS, {
+      credentials: 'include',
+    });
 
     if (response.ok) {
       const airports = await response.json();

@@ -1,6 +1,6 @@
 {
-  "id": "0e541185-6082-4e0f-9609-baff99dc2907",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "d37a18bd-f28a-4f38-b1b7-23eedeaeb8f4",
+  "prevId": "0e541185-6082-4e0f-9609-baff99dc2907",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -65,6 +65,12 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(2, 2)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -97,7 +103,22 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "flights_schedule_table_from_airport_unique": {
+          "name": "flights_schedule_table_from_airport_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "from_airport"
+          ]
+        },
+        "flights_schedule_table_to_airport_unique": {
+          "name": "flights_schedule_table_to_airport_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "to_airport"
+          ]
+        }
+      }
     },
     "public.tickets_table": {
       "name": "tickets_table",

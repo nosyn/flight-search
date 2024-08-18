@@ -29,11 +29,25 @@ export const getAirports = async () => {
   }
 };
 
-export const searchFlights = async () => {
+type SearchFlightArgs = {
+  origin: string;
+  destination: string;
+  dateFrom: string;
+  dateTo: string;
+};
+export const searchFlights = async ({
+  origin,
+  destination,
+  dateFrom,
+  dateTo,
+}: SearchFlightArgs): Promise<FlightSchedule[]> => {
   try {
-    const response = await fetch(API_FLIGHTS, {
-      credentials: 'include',
-    });
+    const response = await fetch(
+      `${API_FLIGHTS}?origin=${origin}&destination=${destination}&dateFrom=${dateFrom}&dateTo=${dateTo}`,
+      {
+        credentials: 'include',
+      }
+    );
 
     if (response.ok) {
       const flights = await response.json();
@@ -51,4 +65,6 @@ export const searchFlights = async () => {
     });
     console.error('Failed to fetch flights', error);
   }
+
+  return [];
 };

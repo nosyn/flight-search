@@ -35,14 +35,27 @@ const seed = async () => {
     for (const arrivalAirport of airports) {
       if (departureAirport.iataCode === arrivalAirport.iataCode) continue;
 
+      const airplane = faker.airline.airplane();
+      const economyPrice = faker.commerce.price({ min: 100, max: 200, dec: 0 });
+      const businessPrice = faker.commerce.price({
+        min: 400,
+        max: 600,
+        dec: 0,
+      });
+
       const flightSchedule = {
-        flightNumber: faker.airline.flightNumber({ length: 6 }),
+        airplaneName: airplane.name,
+        airplaneIataTypeCode: airplane.iataTypeCode,
+        airlineCode: 'CL',
+        flightNumber: faker.airline.flightNumber({ length: 4 }),
         departureAirport: departureAirport.iataCode,
         arrivalAirport: arrivalAirport.iataCode,
         departureTime: faker.date.future(),
         arrivalTime: faker.date.future(),
-        price: faker.commerce.price({ min: 100, max: 200 }),
+        economyPrice,
+        businessPrice,
       };
+
       try {
         await db.insert(schema.flightsScheduleTable).values(flightSchedule);
       } catch (error) {

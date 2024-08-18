@@ -1,38 +1,35 @@
-import { FlightScheduleCard } from '@/components/flights/flight-schedule-card';
 import { toast } from '@/components/ui/use-toast';
+import { useFlightQuery } from '@/hooks/useFlightQuery';
 import { useSearchQuery } from '@/hooks/useSearchQuery';
-import { searchFlights } from '@/lib/apis';
-import { useQuery } from '@tanstack/react-query';
 import { Navigate } from 'react-router-dom';
+import { FlightScheduleCard } from './flight-schedule-card';
 
-export const ChooseFlightPage = () => {
+type ChooseFlightProps = {
+  type: FlightsScheduleType;
+};
+
+export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
   const query = useSearchQuery();
   const origin = query.get('origin') || '';
   const destination = query.get('destination') || '';
-  const dateFrom = query.get('dateFrom') || '';
-  const dateTo = query.get('dateTo') || '';
+  const isDeparture = type === 'departure';
+  const date =
+    (isDeparture ? query.get('dateFrom') : query.get('dateTo')) || '';
 
-  const { isLoading, data, error } = useQuery({
-    queryKey: ['flights', query.toString()],
-    queryFn: () => {
-      return searchFlights({
-        origin,
-        destination,
-        dateFrom,
-        dateTo,
-      });
-    },
-    enabled: !!origin && !!destination && !!dateFrom && !!dateTo,
+  const { isLoading, data, error } = useFlightQuery({
+    origin,
+    destination,
+    date,
   });
 
-  if (!origin || !destination || !dateFrom || !dateTo) {
+  if (!origin || !destination || !date) {
     toast({
       title:
         'Missing some query values in the URL. Navigate back to the home page.',
       description: (
         <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
           <code className='text-white'>
-            {JSON.stringify({ origin, destination, dateFrom, dateTo }, null, 2)}
+            {JSON.stringify({ origin, destination, date }, null, 2)}
           </code>
         </pre>
       ),
@@ -57,9 +54,15 @@ export const ChooseFlightPage = () => {
     return <div>Some thing wrong happened</div>;
   }
 
+  if (data.length === 0) {
+    return <div>Couldn't find any flights. Please search for new one</div>;
+  }
+
   return (
     <div>
-      Choose Flight Page
+      <div className='text-xl font-semibold'>
+        Date: {new Date(data[0].departureTime).toDateString()}
+      </div>
       {data.map((flight) => (
         <FlightScheduleCard key={flight.id} flightSchedule={flight} />
       ))}

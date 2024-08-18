@@ -11,3 +11,5 @@ type FlightSchedule = {
   economyPrice: string;
   businessPrice: string;
 };
+
+type FlightsScheduleType = 'departure' | 'return';

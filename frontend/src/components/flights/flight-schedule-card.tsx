@@ -10,9 +10,9 @@ type FlightCardProps = {
   flightSchedule: FlightSchedule;
 };
 
-export function FlightScheduleCard({ flightSchedule }: FlightCardProps) {
+export const FlightScheduleCard = ({ flightSchedule }: FlightCardProps) => {
   return (
-    <Card className='p-4 max-w-lg flex-grow'>
+    <Card className='p-4 max-w-lg flex-grow my-2'>
       <div className='flex items-center justify-between'>
         <div className='flex flex-col flex-grow'>
           <div className='flex justify-between flex-grow'>
@@ -68,4 +68,4 @@ export function FlightScheduleCard({ flightSchedule }: FlightCardProps) {
       </div>
     </Card>
   );
-}
+};

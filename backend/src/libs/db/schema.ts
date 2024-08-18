@@ -5,9 +5,8 @@ import {
   text,
   varchar,
   timestamp,
-  numeric,
 } from 'drizzle-orm/pg-core';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema } from 'drizzle-zod';
 
 export const airportsTable = pgTable('airports_table', {
   iataCode: varchar('iata_code', { length: 3 }).primaryKey(),
@@ -18,7 +17,12 @@ export const insertAirportsSchema = createInsertSchema(airportsTable);
 
 export const flightsScheduleTable = pgTable('flights_schedule_table', {
   id: serial('id').primaryKey(),
-  flightNumber: varchar('flight_number', { length: 6 }).notNull().unique(),
+  airplaneName: text('airplane_name').notNull(),
+  airplaneIataTypeCode: varchar('airplane_iata_type_code', {
+    length: 3,
+  }).notNull(),
+  airlineCode: varchar('airline_code', { length: 2 }).notNull(),
+  flightNumber: varchar('flight_number', { length: 4 }).notNull(),
   departureAirport: varchar('departure_airport')
     .notNull()
     .references(() => airportsTable.iataCode),
@@ -27,7 +31,8 @@ export const flightsScheduleTable = pgTable('flights_schedule_table', {
     .references(() => airportsTable.iataCode),
   departureTime: timestamp('departure_time', { withTimezone: true }).notNull(),
   arrivalTime: timestamp('arrival_time', { withTimezone: true }).notNull(),
-  price: numeric('price', { precision: 5, scale: 2 }).notNull(),
+  economyPrice: integer('economy_price').notNull(),
+  businessPrice: integer('business_price').notNull(),
 });
 
 export const insertFlightsScheduleSchema =

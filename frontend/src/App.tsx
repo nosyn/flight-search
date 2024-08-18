@@ -4,8 +4,8 @@ import { Layout } from './components/layout';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { queryClient } from './lib/apis';
-import { ChooseFlightPage } from './pages/ChooseFlightPage';
-import { HomePage } from './pages/HomePage';
+import { ChooseFlightPage } from './pages/choose-flight-page';
+import { HomePage } from './pages/home-page';
 
 const router = createBrowserRouter([
   {

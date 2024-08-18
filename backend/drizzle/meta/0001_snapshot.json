@@ -1,6 +1,6 @@
 {
-  "id": "d37a18bd-f28a-4f38-b1b7-23eedeaeb8f4",
-  "prevId": "0e541185-6082-4e0f-9609-baff99dc2907",
+  "id": "26e1fb75-069d-4ae8-afcb-68ff8b44e787",
+  "prevId": "cc095dd5-ea3a-41c1-b15b-79043d6f5baf",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -36,20 +36,38 @@
           "primaryKey": true,
           "notNull": true
         },
-        "flight_number": {
-          "name": "flight_number",
-          "type": "varchar(6)",
+        "airplane_name": {
+          "name": "airplane_name",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "from_airport": {
-          "name": "from_airport",
+        "airplane_iata_type_code": {
+          "name": "airplane_iata_type_code",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "airline_code": {
+          "name": "airline_code",
+          "type": "varchar(2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flight_number": {
+          "name": "flight_number",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "departure_airport": {
+          "name": "departure_airport",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "to_airport": {
-          "name": "to_airport",
+        "arrival_airport": {
+          "name": "arrival_airport",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -66,21 +84,27 @@
           "primaryKey": false,
           "notNull": true
         },
-        "price": {
-          "name": "price",
-          "type": "numeric(2, 2)",
+        "economy_price": {
+          "name": "economy_price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "business_price": {
+          "name": "business_price",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "flights_schedule_table_from_airport_airports_table_iata_code_fk": {
-          "name": "flights_schedule_table_from_airport_airports_table_iata_code_fk",
+        "flights_schedule_table_departure_airport_airports_table_iata_code_fk": {
+          "name": "flights_schedule_table_departure_airport_airports_table_iata_code_fk",
           "tableFrom": "flights_schedule_table",
           "tableTo": "airports_table",
           "columnsFrom": [
-            "from_airport"
+            "departure_airport"
           ],
           "columnsTo": [
             "iata_code"
@@ -88,12 +112,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "flights_schedule_table_to_airport_airports_table_iata_code_fk": {
-          "name": "flights_schedule_table_to_airport_airports_table_iata_code_fk",
+        "flights_schedule_table_arrival_airport_airports_table_iata_code_fk": {
+          "name": "flights_schedule_table_arrival_airport_airports_table_iata_code_fk",
           "tableFrom": "flights_schedule_table",
           "tableTo": "airports_table",
           "columnsFrom": [
-            "to_airport"
+            "arrival_airport"
           ],
           "columnsTo": [
             "iata_code"
@@ -104,18 +128,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "flights_schedule_table_from_airport_unique": {
-          "name": "flights_schedule_table_from_airport_unique",
+        "flights_schedule_table_flight_number_unique": {
+          "name": "flights_schedule_table_flight_number_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "from_airport"
-          ]
-        },
-        "flights_schedule_table_to_airport_unique": {
-          "name": "flights_schedule_table_to_airport_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "to_airport"
+            "flight_number"
           ]
         }
       }

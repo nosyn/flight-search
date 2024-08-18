@@ -67,6 +67,7 @@ export const RoundtripCalendar = ({
                     selected={field.value}
                     onSelect={field.onChange}
                     numberOfMonths={2}
+                    fromDate={new Date()}
                   />
                 </PopoverContent>
               </Popover>

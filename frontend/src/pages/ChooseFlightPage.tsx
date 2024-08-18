@@ -57,16 +57,6 @@ export const ChooseFlightPage = () => {
     return <div>Some thing wrong happened</div>;
   }
 
-  toast({
-    title:
-      'Missing some query values in the URL. Navigate back to the home page.',
-    description: (
-      <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-        <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
-      </pre>
-    ),
-  });
-
   return (
     <div>
       Choose Flight Page

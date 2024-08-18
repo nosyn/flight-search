@@ -1,5 +1,8 @@
 import { Card } from '@/components/ui/card';
-import { getDateTimeFromTimestamp } from '@/lib/utils';
+import {
+  getDateTimeFromTimestamp,
+  getDurationBetweenTimestamps,
+} from '@/lib/utils';
 import { BriefcaseBusinessIcon, PiggyBankIcon, TicketIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 
@@ -12,24 +15,28 @@ export function FlightScheduleCard({ flightSchedule }: FlightCardProps) {
     <Card className='p-4 max-w-lg flex-grow'>
       <div className='flex items-center justify-between'>
         <div className='flex flex-col flex-grow'>
-          <p className='text-sm font-medium'>NONSTOP</p>
           <div className='flex justify-between flex-grow'>
             <div className='text-3xl font-bold'>
-              {getDateTimeFromTimestamp('2024-10-14T16:27:25.792Z')}
+              {getDateTimeFromTimestamp(flightSchedule.departureTime)}
             </div>
             <div className='text-3xl font-bold'>
-              {getDateTimeFromTimestamp('2025-05-20T15:30:55.869Z')}
+              {getDateTimeFromTimestamp(flightSchedule.arrivalTime)}
             </div>
           </div>
           <div className='flex justify-between'>
             <p className='text-sm'>{flightSchedule.departureAirport}</p>
             <p className='text-sm text-muted-foreground'>
-              -----------------4H, 28M-----------------
+              {`----------------- ${getDurationBetweenTimestamps({
+                timestamp1: flightSchedule.departureTime,
+                timestamp2: flightSchedule.arrivalTime,
+              })} -----------------`}
             </p>
             <p className='text-sm'>{flightSchedule.arrivalAirport}</p>
           </div>
           <p className='text-sm'>
-            UA {flightSchedule.flightNumber} (Boeing 757-300)
+            {flightSchedule.airlineCode} {flightSchedule.flightNumber} (
+            {flightSchedule.airplaneName} -{' '}
+            {flightSchedule.airplaneIataTypeCode})
           </p>
         </div>
       </div>
@@ -42,7 +49,7 @@ export function FlightScheduleCard({ flightSchedule }: FlightCardProps) {
           <div className='flex items-center gap-2'>
             <Button variant='outline' size='sm'>
               <TicketIcon className='h-4 w-4 mr-2' />
-              Book ${flightSchedule.price}
+              Book ${flightSchedule.economyPrice}
             </Button>
           </div>
         </Card>
@@ -52,9 +59,9 @@ export function FlightScheduleCard({ flightSchedule }: FlightCardProps) {
             <h2 className='text-xl font-semibold'>Business Class</h2>
           </div>
           <div className='flex items-center gap-2'>
-            <Button size='sm' className='bg-yellow-700'>
+            <Button size='sm' variant='outline'>
               <TicketIcon className='h-4 w-4 mr-2' />
-              Book ${flightSchedule.price}
+              Book ${flightSchedule.businessPrice}
             </Button>
           </div>
         </Card>

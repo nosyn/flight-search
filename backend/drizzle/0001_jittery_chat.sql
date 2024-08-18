@@ -1,0 +1,1 @@
+ALTER TABLE "flights_schedule_table" ADD COLUMN "economy_price" integer NOT NULL;

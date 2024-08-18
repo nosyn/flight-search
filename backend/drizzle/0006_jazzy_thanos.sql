@@ -1,2 +1,0 @@
-ALTER TABLE "flights_schedule_table" DROP CONSTRAINT "flights_schedule_table_departure_airport_unique";--> statement-breakpoint
-ALTER TABLE "flights_schedule_table" DROP CONSTRAINT "flights_schedule_table_arrival_airport_unique";

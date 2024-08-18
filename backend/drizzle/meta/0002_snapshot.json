@@ -1,6 +1,6 @@
 {
-  "id": "71c950ab-0210-4764-9467-72470c7dcfd6",
-  "prevId": "d37a18bd-f28a-4f38-b1b7-23eedeaeb8f4",
+  "id": "74f6d64a-442f-4c13-a53f-c7c4492450a4",
+  "prevId": "26e1fb75-069d-4ae8-afcb-68ff8b44e787",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -36,9 +36,27 @@
           "primaryKey": true,
           "notNull": true
         },
+        "airplane_name": {
+          "name": "airplane_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "airplane_iata_type_code": {
+          "name": "airplane_iata_type_code",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "airline_code": {
+          "name": "airline_code",
+          "type": "varchar(2)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "flight_number": {
           "name": "flight_number",
-          "type": "varchar(6)",
+          "type": "varchar(4)",
           "primaryKey": false,
           "notNull": true
         },
@@ -66,9 +84,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "price": {
-          "name": "price",
-          "type": "numeric(2, 2)",
+        "economy_price": {
+          "name": "economy_price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "business_price": {
+          "name": "business_price",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }
@@ -103,22 +127,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "flights_schedule_table_departure_airport_unique": {
-          "name": "flights_schedule_table_departure_airport_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "departure_airport"
-          ]
-        },
-        "flights_schedule_table_arrival_airport_unique": {
-          "name": "flights_schedule_table_arrival_airport_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "arrival_airport"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "public.tickets_table": {
       "name": "tickets_table",

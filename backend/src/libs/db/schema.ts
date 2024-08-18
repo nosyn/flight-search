@@ -22,7 +22,7 @@ export const flightsScheduleTable = pgTable('flights_schedule_table', {
     length: 3,
   }).notNull(),
   airlineCode: varchar('airline_code', { length: 2 }).notNull(),
-  flightNumber: varchar('flight_number', { length: 4 }).notNull().unique(),
+  flightNumber: varchar('flight_number', { length: 4 }).notNull(),
   departureAirport: varchar('departure_airport')
     .notNull()
     .references(() => airportsTable.iataCode),
@@ -31,7 +31,7 @@ export const flightsScheduleTable = pgTable('flights_schedule_table', {
     .references(() => airportsTable.iataCode),
   departureTime: timestamp('departure_time', { withTimezone: true }).notNull(),
   arrivalTime: timestamp('arrival_time', { withTimezone: true }).notNull(),
-  economyPrice: integer('business_price').notNull(),
+  economyPrice: integer('economy_price').notNull(),
   businessPrice: integer('business_price').notNull(),
 });
 

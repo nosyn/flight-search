@@ -2,10 +2,11 @@ import { toast } from '@/components/ui/use-toast';
 import { useFlightQuery } from '@/hooks/useFlightQuery';
 import { useSearchQuery } from '@/hooks/useSearchQuery';
 import { Navigate } from 'react-router-dom';
-import { FlightScheduleCard } from './flight-schedule-card';
+import { FlightCard } from './flight-card';
 
 type ChooseFlightProps = {
   type: FlightsScheduleType;
+  select: (flight: Flight) => void;
 };
 
 export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
@@ -60,11 +61,9 @@ export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
 
   return (
     <div>
-      <div className='text-xl font-semibold'>
-        Date: {new Date(data[0].departureTime).toDateString()}
-      </div>
+      <div className='text-xl font-semibold'>Date: {date}</div>
       {data.map((flight) => (
-        <FlightScheduleCard key={flight.id} flightSchedule={flight} />
+        <FlightCard key={flight.id} flight={flight} />
       ))}
     </div>
   );

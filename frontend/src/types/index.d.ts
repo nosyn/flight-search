@@ -1,4 +1,4 @@
-type FlightSchedule = {
+type Flight = {
   id: string;
   airplaneName: string;
   airplaneIataTypeCode: string;

@@ -39,7 +39,7 @@ export const searchFlights = async ({
   origin,
   destination,
   date,
-}: SearchFlightArgs): Promise<FlightSchedule[] | null> => {
+}: SearchFlightArgs): Promise<Flight[] | null> => {
   try {
     const response = await fetch(
       `${API_FLIGHTS}?origin=${origin}&destination=${destination}&date=${date}`,

@@ -1,13 +1,12 @@
 import { toast } from '@/components/ui/use-toast';
-import { useFlightQuery } from '@/hooks/useFlightQuery';
 import { useSearchQuery } from '@/hooks/useSearchQuery';
-import { Navigate } from 'react-router-dom';
-import { FlightCard } from './flight-card';
-import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
-import { FlightType } from '@/schemas';
+import { Flight, FlightType } from '@/schemas';
 import { useStepper } from '@stepperize/react';
+import { useFormContext } from 'react-hook-form';
+import { Navigate } from 'react-router-dom';
 import { Steps } from '../booking-steppers';
+import { FlightCard } from './flight-card';
+import { useFlightsQuery } from '@/hooks/use-flights-query';
 
 type ChooseFlightProps = {
   type: FlightsScheduleType;
@@ -15,9 +14,9 @@ type ChooseFlightProps = {
 
 export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
   const query = useSearchQuery();
+  const isDeparture = type === 'departure';
   const origin = query.get('origin') || '';
   const destination = query.get('destination') || '';
-  const isDeparture = type === 'departure';
   const date =
     (isDeparture ? query.get('dateFrom') : query.get('dateTo')) || '';
   const form = useFormContext();
@@ -28,7 +27,7 @@ export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
     flightType,
   }: {
     flight: Flight;
-    flightType: z.infer<typeof FlightType>;
+    flightType: FlightType;
   }) => {
     if (currentStep.id === 'first') {
       form.setValue('departureFlight', {
@@ -51,9 +50,10 @@ export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
     }
   };
 
-  const { isLoading, data, error } = useFlightQuery({
-    origin,
-    destination,
+  const { isLoading, data, error } = useFlightsQuery({
+    // We need to swap the origin and destination when fetching return flights
+    origin: isDeparture ? origin : destination,
+    destination: isDeparture ? destination : origin,
     date,
   });
 

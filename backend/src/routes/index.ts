@@ -1,9 +1,9 @@
 import express, { Request, Response, Router } from 'express';
-import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
 
 // Routes
 import { airportsRouter } from './airports.route';
 import { flightsRouter } from './flights.route';
+import { ticketRouter } from './ticket.route';
 
 export const apiRouter: Router = express.Router();
 
@@ -19,3 +19,4 @@ apiRouter.get('/health', (_req: Request, res: Response) => {
 
 apiRouter.use('/airports', airportsRouter);
 apiRouter.use('/flights', flightsRouter);
+apiRouter.use('/ticket', ticketRouter);

@@ -5,38 +5,43 @@ import {
 } from '@/lib/utils';
 import { BriefcaseBusinessIcon, PiggyBankIcon, TicketIcon } from 'lucide-react';
 import { Button } from '../ui/button';
+import { FlightType } from '@/schemas';
+import { z } from 'zod';
 
 type FlightCardProps = {
-  flightSchedule: FlightSchedule;
+  flight: Flight;
+  selectTicket: (args: {
+    flight: Flight;
+    flightType: z.infer<typeof FlightType>;
+  }) => void;
 };
 
-export const FlightScheduleCard = ({ flightSchedule }: FlightCardProps) => {
+export const FlightCard = ({ flight, selectTicket }: FlightCardProps) => {
   return (
     <Card className='p-4 max-w-lg flex-grow my-2'>
       <div className='flex items-center justify-between'>
         <div className='flex flex-col flex-grow'>
           <div className='flex justify-between flex-grow'>
             <div className='text-3xl font-bold'>
-              {getDateTimeFromTimestamp(flightSchedule.departureTime)}
+              {getDateTimeFromTimestamp(flight.departureTime)}
             </div>
             <div className='text-3xl font-bold'>
-              {getDateTimeFromTimestamp(flightSchedule.arrivalTime)}
+              {getDateTimeFromTimestamp(flight.arrivalTime)}
             </div>
           </div>
           <div className='flex justify-between'>
-            <p className='text-sm'>{flightSchedule.departureAirport}</p>
+            <p className='text-sm'>{flight.departureAirport}</p>
             <p className='text-sm text-muted-foreground'>
               {`----------------- ${getDurationBetweenTimestamps({
-                timestamp1: flightSchedule.departureTime,
-                timestamp2: flightSchedule.arrivalTime,
+                timestamp1: flight.departureTime,
+                timestamp2: flight.arrivalTime,
               })} -----------------`}
             </p>
-            <p className='text-sm'>{flightSchedule.arrivalAirport}</p>
+            <p className='text-sm'>{flight.arrivalAirport}</p>
           </div>
           <p className='text-sm'>
-            {flightSchedule.airlineCode} {flightSchedule.flightNumber} (
-            {flightSchedule.airplaneName} -{' '}
-            {flightSchedule.airplaneIataTypeCode})
+            {flight.airlineCode} {flight.flightNumber} ({flight.airplaneName} -{' '}
+            {flight.airplaneIataTypeCode})
           </p>
         </div>
       </div>
@@ -47,9 +52,15 @@ export const FlightScheduleCard = ({ flightSchedule }: FlightCardProps) => {
             <h2 className='text-xl font-semibold'>Basic Economy</h2>
           </div>
           <div className='flex items-center gap-2'>
-            <Button variant='outline' size='sm'>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => {
+                selectTicket({ flight, flightType: 'economy' });
+              }}
+            >
               <TicketIcon className='h-4 w-4 mr-2' />
-              Book ${flightSchedule.economyPrice}
+              Book ${flight.economyPrice}
             </Button>
           </div>
         </Card>
@@ -59,9 +70,15 @@ export const FlightScheduleCard = ({ flightSchedule }: FlightCardProps) => {
             <h2 className='text-xl font-semibold'>Business Class</h2>
           </div>
           <div className='flex items-center gap-2'>
-            <Button size='sm' variant='outline'>
+            <Button
+              size='sm'
+              variant='outline'
+              onClick={() => {
+                selectTicket({ flight, flightType: 'business' });
+              }}
+            >
               <TicketIcon className='h-4 w-4 mr-2' />
-              Book ${flightSchedule.businessPrice}
+              Book ${flight.businessPrice}
             </Button>
           </div>
         </Card>

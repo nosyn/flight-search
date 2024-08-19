@@ -1,5 +1,5 @@
-type FlightSchedule = {
-  id: string;
+type Flight = {
+  id: number;
   airplaneName: string;
   airplaneIataTypeCode: string;
   airlineCode: string;
@@ -8,8 +8,8 @@ type FlightSchedule = {
   arrivalAirport: string;
   departureTime: string;
   arrivalTime: string;
-  economyPrice: string;
-  businessPrice: string;
+  economyPrice: number;
+  businessPrice: number;
 };
 
 type FlightsScheduleType = 'departure' | 'return';

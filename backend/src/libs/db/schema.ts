@@ -5,6 +5,7 @@ import {
   text,
   varchar,
   timestamp,
+  pgEnum,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
@@ -38,13 +39,32 @@ export const flightsScheduleTable = pgTable('flights_schedule_table', {
 export const insertFlightsScheduleSchema =
   createInsertSchema(flightsScheduleTable);
 
+export const genderEnum = pgEnum('genders', ['m', 'f', 'x', 'u']);
+export const flightType = pgEnum('flight_types', ['economy', 'business']);
+
 export const ticketsTable = pgTable('tickets_table', {
   id: serial('id').primaryKey(),
-  flightId: integer('flight_id')
+  departureFlightId: integer('departure_flight_id')
     .notNull()
     .references(() => flightsScheduleTable.id),
+  departureFlightType: flightType('departure_flight_type').notNull(),
+  departureFlightSeatNumber: varchar('departure_flight_seat_number', {
+    length: 3,
+  }).notNull(),
+  departureFlightRecordLocator: varchar('departure_flight_record_locator', {
+    length: 6,
+  }).notNull(),
+  returnFlightId: integer('return_flight_id')
+    .notNull()
+    .references(() => flightsScheduleTable.id),
+  returnFlightType: flightType('return_flight_type').notNull(),
+  returnFlightSeatNumber: varchar('return_flight_seat_number', {
+    length: 3,
+  }).notNull(),
+  returnFlightRecordLocator: varchar('return_flight_record_locator', {
+    length: 6,
+  }).notNull(),
   passengerName: text('passenger_name').notNull(),
-  passengerEmail: text('passenger_email').notNull(),
-  seatNumber: varchar('seat_number', { length: 3 }).notNull(),
-  recordLocator: varchar('record_locator', { length: 6 }).notNull(),
+  passengerDOB: timestamp('passenger_dob', { withTimezone: true }).notNull(),
+  passengerGender: genderEnum('passenger_gender'),
 });

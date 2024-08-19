@@ -15,6 +15,7 @@ const main = async () => {
     })
   );
   app.use(morgan(__DEV__ ? 'dev' : 'combined'));
+  app.use(express.text());
 
   if (__DEV__) {
     console.warn(

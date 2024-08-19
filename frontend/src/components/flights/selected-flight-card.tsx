@@ -12,7 +12,6 @@ import {
   PencilIcon,
 } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
 import { Steps } from '../booking-steppers';
 import { Button } from '../ui/button';
 import { toast } from '../ui/use-toast';
@@ -26,7 +25,7 @@ import { useState } from 'react';
 
 type SelectedFlightCardProps = {
   flight: Flight;
-  flightType: z.infer<typeof FlightType>;
+  flightType: FlightType;
   type: FlightsScheduleType;
 };
 

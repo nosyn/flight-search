@@ -7,15 +7,13 @@ import {
 } from '@/components/ui/card';
 import { GENDERS } from '@/lib/constants';
 import { useFormContext } from 'react-hook-form';
-import { FlightTicketForm, Steps } from '.';
+import { FlightTicketForm } from '.';
 import { SelectedFlightCard } from '../flights/selected-flight-card';
 import { Button } from '../ui/button';
-import { useStepper } from '@stepperize/react';
 
 export const FourthStep = () => {
   const form = useFormContext<FlightTicketForm>();
   const { departureFlight, returnFlight, name, dob, gender } = form.getValues();
-  const { goToStep } = useStepper<Steps>();
 
   return (
     <div>
@@ -44,13 +42,7 @@ export const FourthStep = () => {
         </CardContent>
       </Card>
       <div className='my-2'>
-        <Button
-          onClick={() => {
-            goToStep('last');
-          }}
-        >
-          Buy Ticket
-        </Button>
+        <Button type='submit'>Buy Ticket</Button>
       </div>
     </div>
   );

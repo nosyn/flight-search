@@ -50,7 +50,6 @@ export const searchFlights = async ({
 
     if (response.ok) {
       const flights = await response.json();
-
       return flights;
     }
 

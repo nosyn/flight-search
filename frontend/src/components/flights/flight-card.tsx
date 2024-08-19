@@ -5,12 +5,18 @@ import {
 } from '@/lib/utils';
 import { BriefcaseBusinessIcon, PiggyBankIcon, TicketIcon } from 'lucide-react';
 import { Button } from '../ui/button';
+import { FlightType } from '@/schemas';
+import { z } from 'zod';
 
 type FlightCardProps = {
   flight: Flight;
+  selectTicket: (args: {
+    flight: Flight;
+    flightType: z.infer<typeof FlightType>;
+  }) => void;
 };
 
-export const FlightCard = ({ flight }: FlightCardProps) => {
+export const FlightCard = ({ flight, selectTicket }: FlightCardProps) => {
   return (
     <Card className='p-4 max-w-lg flex-grow my-2'>
       <div className='flex items-center justify-between'>
@@ -46,7 +52,13 @@ export const FlightCard = ({ flight }: FlightCardProps) => {
             <h2 className='text-xl font-semibold'>Basic Economy</h2>
           </div>
           <div className='flex items-center gap-2'>
-            <Button variant='outline' size='sm'>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => {
+                selectTicket({ flight, flightType: 'economy' });
+              }}
+            >
               <TicketIcon className='h-4 w-4 mr-2' />
               Book ${flight.economyPrice}
             </Button>
@@ -58,7 +70,13 @@ export const FlightCard = ({ flight }: FlightCardProps) => {
             <h2 className='text-xl font-semibold'>Business Class</h2>
           </div>
           <div className='flex items-center gap-2'>
-            <Button size='sm' variant='outline'>
+            <Button
+              size='sm'
+              variant='outline'
+              onClick={() => {
+                selectTicket({ flight, flightType: 'business' });
+              }}
+            >
               <TicketIcon className='h-4 w-4 mr-2' />
               Book ${flight.businessPrice}
             </Button>

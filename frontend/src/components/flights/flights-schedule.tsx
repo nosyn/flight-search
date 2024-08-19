@@ -3,10 +3,14 @@ import { useFlightQuery } from '@/hooks/useFlightQuery';
 import { useSearchQuery } from '@/hooks/useSearchQuery';
 import { Navigate } from 'react-router-dom';
 import { FlightCard } from './flight-card';
+import { useFormContext } from 'react-hook-form';
+import { z } from 'zod';
+import { FlightType } from '@/schemas';
+import { useStepper } from '@stepperize/react';
+import { Steps } from '../booking-steppers';
 
 type ChooseFlightProps = {
   type: FlightsScheduleType;
-  select: (flight: Flight) => void;
 };
 
 export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
@@ -16,6 +20,36 @@ export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
   const isDeparture = type === 'departure';
   const date =
     (isDeparture ? query.get('dateFrom') : query.get('dateTo')) || '';
+  const form = useFormContext();
+  const { currentStep, goToStep } = useStepper<Steps>();
+
+  const selectTicket = ({
+    flight,
+    flightType,
+  }: {
+    flight: Flight;
+    flightType: z.infer<typeof FlightType>;
+  }) => {
+    if (currentStep.id === 'first') {
+      form.setValue('departureFlight', {
+        flight,
+        flightType,
+      });
+
+      goToStep(form.getValues('returnFlight') ? 'third' : 'second');
+    } else if (currentStep.id === 'second') {
+      form.setValue('returnFlight', {
+        flight,
+        flightType,
+      });
+      goToStep('third');
+    } else {
+      toast({
+        title: 'Error when selecting ticket',
+        description: 'Something wrong has happened.',
+      });
+    }
+  };
 
   const { isLoading, data, error } = useFlightQuery({
     origin,
@@ -61,10 +95,19 @@ export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
 
   return (
     <div>
+      <div className='font-bold mb-4'>
+        {type === 'departure' ? 'Departure flights' : 'Return flights'}
+      </div>
       <div className='text-xl font-semibold'>Date: {date}</div>
-      {data.map((flight) => (
-        <FlightCard key={flight.id} flight={flight} />
-      ))}
+      <div className='max-h-96 overflow-auto pr-6'>
+        {data.map((flight) => (
+          <FlightCard
+            key={flight.id}
+            flight={flight}
+            selectTicket={selectTicket}
+          />
+        ))}
+      </div>
     </div>
   );
 };

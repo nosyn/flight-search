@@ -1,7 +1,7 @@
 import { SearchFlightArgs, searchFlights } from '@/lib/apis';
 import { useQuery } from '@tanstack/react-query';
 
-export const useFlightQuery = ({
+export const useFlightsQuery = ({
   date,
   destination,
   origin,

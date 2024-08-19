@@ -13,6 +13,7 @@ export const FlightSchema = z.object({
   economyPrice: z.number(),
   businessPrice: z.number(),
 });
+export type Flight = z.infer<typeof FlightSchema>;
 
 export const FlightTypeSchema = z.enum(['economy', 'business']);
 export type FlightType = z.infer<typeof FlightTypeSchema>;

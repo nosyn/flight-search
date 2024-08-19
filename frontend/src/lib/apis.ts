@@ -1,7 +1,7 @@
 import { toast } from '@/components/ui/use-toast';
-import { API_AIRPORTS, API_FLIGHTS, API_TICKET } from './constants';
+import { BuyingFlightTicket, Flight } from '@/schemas';
 import { QueryClient } from '@tanstack/react-query';
-import { BuyingFlightTicket } from '@/schemas';
+import { API_AIRPORTS, API_FLIGHTS, API_TICKET } from './constants';
 
 // Create a client
 export const queryClient = new QueryClient();
@@ -51,6 +51,36 @@ export const searchFlights = async ({
     if (response.ok) {
       const flights = await response.json();
       return flights;
+    }
+
+    toast({
+      title: `Calling API Error with status: ${response.status}`,
+    });
+  } catch (error) {
+    toast({
+      title: 'Calling API Error',
+      description: 'Failed to fetch flights. See console.log for detail',
+    });
+    console.error('Failed to fetch flights', error);
+  }
+
+  return null;
+};
+
+export type GetFlightArgs = {
+  flightId: string;
+};
+export const getFlight = async ({
+  flightId,
+}: GetFlightArgs): Promise<Flight | null> => {
+  try {
+    const response = await fetch(`${API_FLIGHTS}/${flightId}`, {
+      credentials: 'include',
+    });
+
+    if (response.ok) {
+      const flight = await response.json();
+      return flight;
     }
 
     toast({

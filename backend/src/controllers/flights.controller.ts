@@ -39,3 +39,32 @@ export const getFlights = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const getFlight = async (req: Request, res: Response) => {
+  try {
+    const flightId = parseInt(req.params.id);
+
+    if (!flightId) {
+      res.status(400).json({
+        message: `Invalid flight id parameter.`,
+      });
+      return;
+    }
+
+    const flight = await db.query.flightsScheduleTable.findFirst({
+      where: and(eq(flightsScheduleTable.id, flightId)),
+    });
+
+    if (!flight) {
+      res.status(404).json({
+        message: `Flight not found.`,
+      });
+      return;
+    }
+
+    res.status(200).json(flight);
+  } catch (error) {
+    console.error('Error while getting flights: ', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};

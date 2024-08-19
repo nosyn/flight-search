@@ -3,7 +3,7 @@ import {
   getDateTimeFromTimestamp,
   getDurationBetweenTimestamps,
 } from '@/lib/utils';
-import { FlightType } from '@/schemas';
+import { Flight, FlightType } from '@/schemas';
 import { useStepper } from '@stepperize/react';
 import {
   BriefcaseBusinessIcon,

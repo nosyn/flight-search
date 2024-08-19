@@ -3,17 +3,13 @@ import {
   getDateTimeFromTimestamp,
   getDurationBetweenTimestamps,
 } from '@/lib/utils';
+import { Flight, FlightType } from '@/schemas';
 import { BriefcaseBusinessIcon, PiggyBankIcon, TicketIcon } from 'lucide-react';
 import { Button } from '../ui/button';
-import { FlightType } from '@/schemas';
-import { z } from 'zod';
 
 type FlightCardProps = {
   flight: Flight;
-  selectTicket: (args: {
-    flight: Flight;
-    flightType: z.infer<typeof FlightType>;
-  }) => void;
+  selectTicket: (args: { flight: Flight; flightType: FlightType }) => void;
 };
 
 export const FlightCard = ({ flight, selectTicket }: FlightCardProps) => {

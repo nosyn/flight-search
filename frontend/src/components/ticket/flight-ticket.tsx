@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useFlightQuery } from '@/hooks/use-flight-query';
 import { FlightType } from '@/schemas';
 
 type FlightTicketProps = {
@@ -20,26 +21,45 @@ export default function FlightTicket({
   passengerGender,
   passengerDOB,
 }: FlightTicketProps) {
+  const { data, isLoading, error } = useFlightQuery({
+    flightId: String(flightId),
+  });
+
+  if (isLoading) {
+    return <div>Loading flight ticket</div>;
+  }
+
+  if (error || !data) {
+    console.error('Error while loading flight ticket', error);
+    return <div>Error while loading flight ticket</div>;
+  }
+
   return (
     <Card className='w-full max-w-2xl'>
-      <CardHeader className='bg-primary text-primary-foreground p-6'>
+      <CardHeader className='bg-primary text-primary-foreground p-4'>
         <div className='flex items-center justify-between'>
           <div className='font-semibold text-2xl capitalize'>
             Flight Ticket - {flightType}
           </div>
         </div>
       </CardHeader>
-      <CardContent className='p-6 grid gap-6'>
+      <CardContent className='p-4 grid gap-2'>
         <div>
           <FlightTicket.SubTitle subTitle='Flight Information' />
           <FlightTicket.SubItem label='Seat Number' value={flightSeatNumber} />
-          <FlightTicket.SubItem label='Airline Code' value='AA' />
+          <FlightTicket.SubItem label='Airline Code' value={data.airlineCode} />
           <FlightTicket.SubItem
             label='Record Locator'
             value={flightRecordLocator}
           />
-          <FlightTicket.SubItem label='Departure From' value='SFO' />
-          <FlightTicket.SubItem label='Arrival To' value='JFK' />
+          <FlightTicket.SubItem
+            label='Departure From'
+            value={data.departureAirport}
+          />
+          <FlightTicket.SubItem
+            label='Arrival To'
+            value={data.arrivalAirport}
+          />
         </div>
         <div className='grid md:grid-cols-2 gap-6'>
           <div className='grid gap-2'>
@@ -56,9 +76,18 @@ export default function FlightTicket({
           <div className='grid gap-2'>
             <FlightTicket.SubTitle subTitle='Airplane Details' />
             <div className='grid gap-1'>
-              <FlightTicket.SubItem label='Flight Number' value='AA123' />
-              <FlightTicket.SubItem label='Airplane' value='Boeing 737' />
-              <FlightTicket.SubItem label='Airplane' value='Boeing 737' />
+              <FlightTicket.SubItem
+                label='Flight Number'
+                value={`${data.airlineCode}${data.flightNumber}`}
+              />
+              <FlightTicket.SubItem
+                label='Airplane'
+                value={data.airplaneName}
+              />
+              <FlightTicket.SubItem
+                label='Airplane Code'
+                value={data.airplaneIataTypeCode}
+              />
             </div>
           </div>
         </div>

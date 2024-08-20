@@ -46,25 +46,42 @@ export default function FlightTicket({
       <CardContent className='p-4 grid gap-2'>
         <div>
           <FlightTicket.SubTitle subTitle='Flight Information' />
+          <FlightTicket.SubItem
+            label='Flight Number'
+            value={`${data.airlineCode}${data.flightNumber}`}
+          />
           <FlightTicket.SubItem label='Seat Number' value={flightSeatNumber} />
-          <FlightTicket.SubItem label='Airline Code' value={data.airlineCode} />
           <FlightTicket.SubItem
             label='Record Locator'
             value={flightRecordLocator}
           />
-          <FlightTicket.SubItem
-            label='Departure From'
-            value={data.departureAirport}
-          />
-          <FlightTicket.SubItem
-            label='Arrival To'
-            value={data.arrivalAirport}
-          />
+          <div className='grid grid-cols-1 md:grid-cols-2 md:gap-2'>
+            <div>
+              <FlightTicket.SubItem
+                label='Departure From'
+                value={data.departureAirport}
+              />
+              <FlightTicket.SubItem
+                label='Departure Time'
+                value={new Date(data.departureTime).toLocaleString()}
+              />
+            </div>
+            <div>
+              <FlightTicket.SubItem
+                label='Arrival To'
+                value={data.arrivalAirport}
+              />
+              <FlightTicket.SubItem
+                label='Arrival Time'
+                value={new Date(data.arrivalTime).toLocaleString()}
+              />
+            </div>
+          </div>
         </div>
-        <div className='grid md:grid-cols-2 gap-6'>
-          <div className='grid gap-2'>
+        <div className='grid md:grid-cols-2 md:gap-6'>
+          <div className='flex flex-col gap-2'>
             <FlightTicket.SubTitle subTitle='Passenger Information' />
-            <div className='grid gap-1'>
+            <div className='flex flex-col gap-1'>
               <FlightTicket.SubItem label='Name' value={passengerName} />
               <FlightTicket.SubItem label='Gender' value={passengerGender} />
               <FlightTicket.SubItem
@@ -75,11 +92,7 @@ export default function FlightTicket({
           </div>
           <div className='grid gap-2'>
             <FlightTicket.SubTitle subTitle='Airplane Details' />
-            <div className='grid gap-1'>
-              <FlightTicket.SubItem
-                label='Flight Number'
-                value={`${data.airlineCode}${data.flightNumber}`}
-              />
+            <div className='flex flex-col gap-2'>
               <FlightTicket.SubItem
                 label='Airplane'
                 value={data.airplaneName}
@@ -88,6 +101,17 @@ export default function FlightTicket({
                 label='Airplane Code'
                 value={data.airplaneIataTypeCode}
               />
+              {flightType === 'economy' ? (
+                <FlightTicket.SubItem
+                  label='Economy Price'
+                  value={`${data.economyPrice}$`}
+                />
+              ) : (
+                <FlightTicket.SubItem
+                  label='Business Price'
+                  value={`${data.businessPrice}$`}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -97,14 +121,16 @@ export default function FlightTicket({
 }
 
 FlightTicket.SubTitle = ({ subTitle }: { subTitle: string }) => {
-  return <div className='font-medium text-lg'>{subTitle}</div>;
+  return (
+    <div className='font-semibold italic text-lg underline'>{subTitle}</div>
+  );
 };
 
 FlightTicket.SubItem = ({ label, value }: { label: string; value: string }) => {
   return (
     <div className='flex items-start justify-between gap-2'>
-      <div className='text-muted-foreground'>{label}</div>
-      <div className='capitalize text-end'>{value}</div>
+      <div className='font-medium'>{label}</div>
+      <div className='capitalize text-end text-muted-foreground'>{value}</div>
     </div>
   );
 };

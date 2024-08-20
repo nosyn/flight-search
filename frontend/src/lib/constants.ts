@@ -1,3 +1,4 @@
+export const WEB_URL = import.meta.env.VITE_WEB_URL || 'http://localhost:5173';
 export const SERVER_URL = 'http://localhost:8000' as const;
 export const API_AIRPORTS = SERVER_URL + '/airports';
 export const API_FLIGHTS = SERVER_URL + '/flights';

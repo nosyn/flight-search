@@ -2,7 +2,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
-import { __DEV__, HOST, PORT, CORS_ORIGIN } from './constants';
+import { __DEV__, HOST, PORT, CORS_ORIGIN } from './libs/constants';
 import { apiRouter } from './routes';
 
 const main = async () => {

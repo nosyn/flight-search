@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { DB_CONNECTION_STRING } from '../src/constants';
+import { DB_CONNECTION_STRING } from '../src/libs/constants';
 import * as schema from '../src/libs/db/schema';
 
 interface Flight {

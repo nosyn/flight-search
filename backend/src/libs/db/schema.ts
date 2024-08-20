@@ -6,6 +6,7 @@ import {
   varchar,
   timestamp,
   pgEnum,
+  boolean,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
@@ -67,4 +68,5 @@ export const ticketsTable = pgTable('tickets_table', {
   passengerName: text('passenger_name').notNull(),
   passengerDOB: timestamp('passenger_dob', { withTimezone: true }).notNull(),
   passengerGender: genderEnum('passenger_gender'),
+  payment_status: boolean('payment_status').default(false).notNull(),
 });

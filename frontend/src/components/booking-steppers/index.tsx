@@ -8,12 +8,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { defineSteps, Stepper, useStepper } from '@stepperize/react';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { SelectedFlightCard } from '../flights/selected-flight-card';
 import { Form } from '../ui/form';
 import { FirstStep } from './first-step';
 import { FourthStep } from './fourth-step';
-import { LastStep } from './last-step';
 import { SecondStep } from './second-step';
 import ThirdStep from './third-step';
 
@@ -54,14 +54,13 @@ const steps = defineSteps(
     description: 'Choose your return flight',
   },
   { id: 'third' },
-  { id: 'fourth' },
-  { id: 'last' }
+  { id: 'fourth' }
 );
 
 export type Steps = typeof steps;
 
 const BookingSteps = () => {
-  const { when, currentStep, goToStep } = useStepper<Steps>();
+  const { when, currentStep } = useStepper<Steps>();
   const form = useForm<FlightTicketForm>({
     resolver: zodResolver(FlightTicketFormSchema),
   });
@@ -71,6 +70,7 @@ const BookingSteps = () => {
   });
   const departureFlight = form.watch('departureFlight');
   const returnFlight = form.watch('returnFlight');
+  const navigate = useNavigate();
 
   async function onSubmit(data: FlightTicketForm) {
     const {
@@ -92,8 +92,14 @@ const BookingSteps = () => {
       return;
     }
 
-    await mutation.mutateAsync(parsedData);
-    goToStep('last');
+    const ticket = await mutation.mutateAsync(parsedData);
+
+    navigate({
+      pathname: '/payment',
+      search: new URLSearchParams({
+        ticketId: String(ticket.id),
+      }).toString(),
+    });
   }
 
   return (
@@ -121,24 +127,20 @@ const BookingSteps = () => {
             </div>
           )}
           <div>
-            {when('first').render((step) => (
+            {when('first').render(() => (
               <FirstStep />
             ))}
 
-            {when('second').render((step) => (
+            {when('second').render(() => (
               <SecondStep />
             ))}
 
-            {when('third').render((step) => (
+            {when('third').render(() => (
               <ThirdStep />
             ))}
 
-            {when('fourth').render((step) => (
+            {when('fourth').render(() => (
               <FourthStep />
-            ))}
-
-            {when('last').render(() => (
-              <LastStep data={mutation.data} />
             ))}
           </div>
         </div>

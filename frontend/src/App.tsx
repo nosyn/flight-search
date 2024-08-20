@@ -6,6 +6,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { queryClient } from './lib/apis';
 import { ChooseFlightPage } from './pages/choose-flight-page';
 import { HomePage } from './pages/home-page';
+import { PaymentPage } from './pages/payment-page';
+import { TicketPage } from './pages/ticket-page';
+import { NotFoundPage } from './pages/not-found-page';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +22,18 @@ const router = createBrowserRouter([
       {
         path: 'choose-flight',
         element: <ChooseFlightPage />,
+      },
+      {
+        path: 'payment',
+        element: <PaymentPage />,
+      },
+      {
+        path: 'ticket',
+        element: <TicketPage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },

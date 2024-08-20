@@ -42,7 +42,7 @@ export const FourthStep = () => {
         </CardContent>
       </Card>
       <div className='my-2'>
-        <Button type='submit'>Buy Ticket</Button>
+        <Button type='submit'>Process to payment</Button>
       </div>
     </div>
   );

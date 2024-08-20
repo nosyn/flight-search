@@ -1,0 +1,1 @@
+ALTER TABLE "tickets_table" ADD COLUMN "payment_status" boolean DEFAULT false NOT NULL;

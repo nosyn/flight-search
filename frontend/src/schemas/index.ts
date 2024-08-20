@@ -27,4 +27,22 @@ export const BuyingFlightTicketSchema = z.object({
   passengerDOB: z.date(),
   passengerGender: z.string(),
 });
+
 export type BuyingFlightTicket = z.infer<typeof BuyingFlightTicketSchema>;
+
+export const TicketSchema = z.object({
+  id: z.number(),
+  departureFlightId: z.number(),
+  departureFlightType: FlightTypeSchema,
+  departureFlightSeatNumber: z.string(),
+  departureFlightRecordLocator: z.string(),
+  returnFlightId: z.number(),
+  returnFlightType: FlightTypeSchema,
+  returnFlightSeatNumber: z.string(),
+  returnFlightRecordLocator: z.string(),
+  passengerName: z.string(),
+  passengerDOB: z.string(),
+  passengerGender: z.string(),
+  payment_status: z.boolean(),
+});
+export type Ticket = z.infer<typeof TicketSchema>;

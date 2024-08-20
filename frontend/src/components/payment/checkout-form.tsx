@@ -7,6 +7,7 @@ import {
 import { Button } from '../ui/button';
 import { LoaderIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { WEB_URL } from '@/lib/constants';
 
 export const CheckoutForm = ({ ticketId }: { ticketId: string }) => {
   const stripe = useStripe();
@@ -14,21 +15,8 @@ export const CheckoutForm = ({ ticketId }: { ticketId: string }) => {
 
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [successPayment, setSuccessPayment] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (successPayment) {
-      setTimeout(() => {
-        navigate({
-          pathname: '/ticket',
-          search: new URLSearchParams({
-            ticketId: ticketId,
-          }).toString(),
-        });
-      }, 3500);
-    }
-  }, [successPayment]);
   useEffect(() => {
     if (!stripe) {
       return;
@@ -45,10 +33,17 @@ export const CheckoutForm = ({ ticketId }: { ticketId: string }) => {
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
       switch (paymentIntent?.status) {
         case 'succeeded':
-          setSuccessPayment(true);
           setMessage(
             'Payment succeeded!. You will be redirected in 3 seconds.'
           );
+          setTimeout(() => {
+            navigate({
+              pathname: '/ticket',
+              search: new URLSearchParams({
+                ticketId: ticketId,
+              }).toString(),
+            });
+          }, 3000);
           break;
         case 'processing':
           setMessage('Your payment is processing.');
@@ -78,7 +73,7 @@ export const CheckoutForm = ({ ticketId }: { ticketId: string }) => {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: `http://localhost:5173/payment?ticketId=${ticketId}`,
+        return_url: `${WEB_URL}/payment?ticketId=${ticketId}`,
       },
     });
 
@@ -98,36 +93,33 @@ export const CheckoutForm = ({ ticketId }: { ticketId: string }) => {
 
   return (
     <div>
-      {!successPayment && (
-        <form
-          id='payment-form'
-          onSubmit={handleSubmit}
-          className='max-w-[480px]'
+      <form id='payment-form' onSubmit={handleSubmit} className='max-w-[480px]'>
+        <p className='font-semibold text-xl'>
+          Please enter your payment details to complete the booking
+        </p>
+        <PaymentElement
+          id='payment-element'
+          options={{
+            paymentMethodOrder: ['visa'],
+          }}
+        />
+        <Button
+          disabled={isLoading || !stripe || !elements}
+          id='submit'
+          type='submit'
+          className='my-2'
         >
-          <PaymentElement
-            id='payment-element'
-            options={{
-              paymentMethodOrder: ['visa'],
-            }}
-          />
-          <Button
-            disabled={isLoading || !stripe || !elements}
-            id='submit'
-            type='submit'
-            className='my-2'
-          >
-            {isLoading && (
-              <LoaderIcon
-                size='small'
-                className='animate-spin h-5 w-5 mr-3'
-                viewBox='0 0 24 24'
-              />
-            )}
-            Pay now
-          </Button>
-          {/* Show any error or success messages */}
-        </form>
-      )}
+          {isLoading && (
+            <LoaderIcon
+              size='small'
+              className='animate-spin h-5 w-5 mr-3'
+              viewBox='0 0 24 24'
+            />
+          )}
+          Pay now
+        </Button>
+        {/* Show any error or success messages */}
+      </form>
 
       {message && (
         <p id='payment-message' className='font-bold text-2xl'>

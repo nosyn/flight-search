@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import postgres from 'postgres';
-import { DB_CONNECTION_STRING } from '../../constants';
+import { DB_CONNECTION_STRING } from '../constants';
 import { sleep } from '../utils';
 
 export const dbMigration = async () => {

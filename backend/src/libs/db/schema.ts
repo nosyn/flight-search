@@ -81,10 +81,9 @@ export const ticketsTable = pgTable('tickets_table', {
 /**
  * Users Table
  */
-
+// `clerk_id`, `username`, and `email` are coming from Clerk
 export const usersTable = pgTable('users_table', {
-  username: text('username').notNull().unique().primaryKey(),
-  email: text('email').notNull().unique(),
+  id: serial('id').primaryKey(),
   clerk_id: text('clerk_id').unique(),
   stripe_id: text('stripe_id').unique(),
 });

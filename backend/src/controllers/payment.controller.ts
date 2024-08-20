@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { stripeClient } from '../libs/stripe/client';
+import { WithAuthProp } from '@clerk/clerk-sdk-node';
 
-export const createPaymentIntent = async (req: Request, res: Response) => {
+export const createPaymentIntent = async (_req: Request, res: Response) => {
   try {
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripeClient.paymentIntents.create({

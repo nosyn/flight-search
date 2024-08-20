@@ -1,6 +1,6 @@
 import { Toaster } from '@/components/ui/toaster';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Layout } from './components/layout';
+import { Layout } from './components/protected-layout';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { queryClient } from './lib/apis';

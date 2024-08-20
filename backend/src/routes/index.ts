@@ -6,6 +6,7 @@ import { airportsRouter } from './airports.route';
 import { flightsRouter } from './flights.route';
 import { ticketRouter } from './ticket.route';
 import { paymentRouter } from './payment';
+import { meRouter } from './me.route';
 
 export const apiRouter: Router = express.Router();
 
@@ -30,6 +31,7 @@ apiRouter.use('/airports', airportsRouter);
 apiRouter.use('/flights', flightsRouter);
 apiRouter.use('/ticket', ticketRouter);
 apiRouter.use('/payment', paymentRouter);
+apiRouter.use('/me', meRouter);
 
 // Error handling
 apiRouter.use((err, req, res, next) => {

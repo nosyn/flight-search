@@ -1,3 +1,4 @@
+import { useMeQuery } from '@/hooks/use-me-query';
 import {
   SignedIn,
   SignedOut,
@@ -36,9 +37,16 @@ export function Layout() {
           <div>Click Sign In Button On The Top Right To Get Started</div>
         </SignedOut>
         <SignedIn>
-          <Outlet />
+          <Layout.Protected />
         </SignedIn>
       </main>
     </div>
   );
 }
+
+Layout.Protected = () => {
+  // This query is used to get the user information from our db.
+  useMeQuery();
+
+  return <Outlet />;
+};

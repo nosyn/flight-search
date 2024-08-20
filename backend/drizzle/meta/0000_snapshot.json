@@ -1,5 +1,5 @@
 {
-  "id": "cc095dd5-ea3a-41c1-b15b-79043d6f5baf",
+  "id": "8c832a70-e6be-4030-851a-2873017c1840",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -84,6 +84,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "economy_price": {
+          "name": "economy_price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "business_price": {
           "name": "business_price",
           "type": "integer",
@@ -121,15 +127,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "flights_schedule_table_flight_number_unique": {
-          "name": "flights_schedule_table_flight_number_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "flight_number"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "public.tickets_table": {
       "name": "tickets_table",
@@ -141,9 +139,53 @@
           "primaryKey": true,
           "notNull": true
         },
-        "flight_id": {
-          "name": "flight_id",
+        "departure_flight_id": {
+          "name": "departure_flight_id",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "departure_flight_type": {
+          "name": "departure_flight_type",
+          "type": "flight_types",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "departure_flight_seat_number": {
+          "name": "departure_flight_seat_number",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "departure_flight_record_locator": {
+          "name": "departure_flight_record_locator",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "return_flight_id": {
+          "name": "return_flight_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "return_flight_type": {
+          "name": "return_flight_type",
+          "type": "flight_types",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "return_flight_seat_number": {
+          "name": "return_flight_seat_number",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "return_flight_record_locator": {
+          "name": "return_flight_record_locator",
+          "type": "varchar(6)",
           "primaryKey": false,
           "notNull": true
         },
@@ -153,33 +195,48 @@
           "primaryKey": false,
           "notNull": true
         },
-        "passenger_email": {
-          "name": "passenger_email",
-          "type": "text",
+        "passenger_dob": {
+          "name": "passenger_dob",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
-        "seat_number": {
-          "name": "seat_number",
-          "type": "varchar(3)",
+        "passenger_gender": {
+          "name": "passenger_gender",
+          "type": "genders",
+          "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "record_locator": {
-          "name": "record_locator",
-          "type": "varchar(6)",
+        "payment_status": {
+          "name": "payment_status",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "tickets_table_flight_id_flights_schedule_table_id_fk": {
-          "name": "tickets_table_flight_id_flights_schedule_table_id_fk",
+        "tickets_table_departure_flight_id_flights_schedule_table_id_fk": {
+          "name": "tickets_table_departure_flight_id_flights_schedule_table_id_fk",
           "tableFrom": "tickets_table",
           "tableTo": "flights_schedule_table",
           "columnsFrom": [
-            "flight_id"
+            "departure_flight_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tickets_table_return_flight_id_flights_schedule_table_id_fk": {
+          "name": "tickets_table_return_flight_id_flights_schedule_table_id_fk",
+          "tableFrom": "tickets_table",
+          "tableTo": "flights_schedule_table",
+          "columnsFrom": [
+            "return_flight_id"
           ],
           "columnsTo": [
             "id"
@@ -190,9 +247,71 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.users_table": {
+      "name": "users_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "clerk_id": {
+          "name": "clerk_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripe_id": {
+          "name": "stripe_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_table_clerk_id_unique": {
+          "name": "users_table_clerk_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "clerk_id"
+          ]
+        },
+        "users_table_stripe_id_unique": {
+          "name": "users_table_stripe_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stripe_id"
+          ]
+        }
+      }
     }
   },
-  "enums": {},
+  "enums": {
+    "public.flight_types": {
+      "name": "flight_types",
+      "schema": "public",
+      "values": [
+        "economy",
+        "business"
+      ]
+    },
+    "public.genders": {
+      "name": "genders",
+      "schema": "public",
+      "values": [
+        "m",
+        "f",
+        "x",
+        "u"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "_meta": {

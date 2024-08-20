@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
+import { and, eq } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { db } from '../libs/db';
 import { ticketsTable } from '../libs/db/schema';
-import { and, eq } from 'drizzle-orm';
 
 export const flightTypeSchema = z.enum(['economy', 'business']);
 export const passengerGenderSchema = z.enum(['m', 'f', 'x', 'u']);

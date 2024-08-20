@@ -46,3 +46,9 @@ export const TicketSchema = z.object({
   payment_status: z.boolean(),
 });
 export type Ticket = z.infer<typeof TicketSchema>;
+
+export const MeSchema = z.object({
+  id: z.number(),
+  clerk_id: z.string(),
+});
+export type Me = z.infer<typeof MeSchema>;

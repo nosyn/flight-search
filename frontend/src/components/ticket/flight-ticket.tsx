@@ -35,7 +35,7 @@ export default function FlightTicket({
   }
 
   return (
-    <Card className='w-full max-w-2xl'>
+    <Card className='w-full max-w-3xl'>
       <CardHeader className='bg-primary text-primary-foreground p-4'>
         <div className='flex items-center justify-between'>
           <div className='font-semibold text-2xl capitalize'>
@@ -102,9 +102,9 @@ FlightTicket.SubTitle = ({ subTitle }: { subTitle: string }) => {
 
 FlightTicket.SubItem = ({ label, value }: { label: string; value: string }) => {
   return (
-    <div className='flex items-center justify-between'>
+    <div className='flex items-start justify-between gap-2'>
       <div className='text-muted-foreground'>{label}</div>
-      <div className='capitalize'>{value}</div>
+      <div className='capitalize text-end'>{value}</div>
     </div>
   );
 };

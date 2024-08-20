@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useFlightQuery = ({ flightId }: GetFlightArgs) => {
   return useQuery<Flight | null>({
-    queryKey: ['flights'],
+    queryKey: ['flights', flightId],
     queryFn: () => {
       return getFlight({
         flightId,

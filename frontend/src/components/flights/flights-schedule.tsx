@@ -96,10 +96,12 @@ export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
   return (
     <div>
       <div className='font-bold mb-4'>
-        {type === 'departure' ? 'Departure flights' : 'Return flights'}
+        {type === 'departure'
+          ? 'Select departure flights'
+          : 'Select return flights'}
       </div>
       <div className='text-xl font-semibold'>Date: {date}</div>
-      <div className='max-h-96 overflow-auto pr-6'>
+      <div className='max-h-[540px] overflow-auto pr-6'>
         {data.map((flight) => (
           <FlightCard
             key={flight.id}

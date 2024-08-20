@@ -10,13 +10,18 @@ import {
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
+/**
+ * Airports Table
+ */
 export const airportsTable = pgTable('airports_table', {
   iataCode: varchar('iata_code', { length: 3 }).primaryKey(),
   name: text('name').notNull(),
 });
-
 export const insertAirportsSchema = createInsertSchema(airportsTable);
 
+/**
+ * Flights Schedule Table
+ */
 export const flightsScheduleTable = pgTable('flights_schedule_table', {
   id: serial('id').primaryKey(),
   airplaneName: text('airplane_name').notNull(),
@@ -40,15 +45,17 @@ export const flightsScheduleTable = pgTable('flights_schedule_table', {
 export const insertFlightsScheduleSchema =
   createInsertSchema(flightsScheduleTable);
 
+/**
+ * Tickets table
+ */
 export const genderEnum = pgEnum('genders', ['m', 'f', 'x', 'u']);
-export const flightType = pgEnum('flight_types', ['economy', 'business']);
-
+export const flightTypeEnum = pgEnum('flight_types', ['economy', 'business']);
 export const ticketsTable = pgTable('tickets_table', {
   id: serial('id').primaryKey(),
   departureFlightId: integer('departure_flight_id')
     .notNull()
     .references(() => flightsScheduleTable.id),
-  departureFlightType: flightType('departure_flight_type').notNull(),
+  departureFlightType: flightTypeEnum('departure_flight_type').notNull(),
   departureFlightSeatNumber: varchar('departure_flight_seat_number', {
     length: 3,
   }).notNull(),
@@ -58,7 +65,7 @@ export const ticketsTable = pgTable('tickets_table', {
   returnFlightId: integer('return_flight_id')
     .notNull()
     .references(() => flightsScheduleTable.id),
-  returnFlightType: flightType('return_flight_type').notNull(),
+  returnFlightType: flightTypeEnum('return_flight_type').notNull(),
   returnFlightSeatNumber: varchar('return_flight_seat_number', {
     length: 3,
   }).notNull(),
@@ -69,4 +76,15 @@ export const ticketsTable = pgTable('tickets_table', {
   passengerDOB: timestamp('passenger_dob', { withTimezone: true }).notNull(),
   passengerGender: genderEnum('passenger_gender'),
   payment_status: boolean('payment_status').default(false).notNull(),
+});
+
+/**
+ * Users Table
+ */
+
+export const usersTable = pgTable('users_table', {
+  username: text('username').notNull().unique().primaryKey(),
+  email: text('email').notNull().unique(),
+  clerk_id: text('clerk_id').unique(),
+  stripe_id: text('stripe_id').unique(),
 });

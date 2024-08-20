@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import {
+  cn,
   getDateTimeFromTimestamp,
   getDurationBetweenTimestamps,
 } from '@/lib/utils';
@@ -47,7 +48,9 @@ export const SelectedFlightCard = ({
       <div className='flex items-center justify-start space-x-4'>
         <CollapsibleTrigger asChild>
           <Button variant='ghost' size='sm' className='w-9 p-0'>
-            <ChevronsUpDown className='h-4 w-4' />
+            <ChevronsUpDown
+              className={cn('h-4 w-4', isOpen ?? 'bg-slate-500')}
+            />
             <span className='sr-only'>Toggle</span>
           </Button>
         </CollapsibleTrigger>

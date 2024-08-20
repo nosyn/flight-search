@@ -104,6 +104,9 @@ export const CheckoutForm = ({ ticketId }: { ticketId: string }) => {
           onSubmit={handleSubmit}
           className='max-w-[480px]'
         >
+          <p className='font-semibold text-xl'>
+            Please enter your payment details to complete the booking
+          </p>
           <PaymentElement
             id='payment-element'
             options={{

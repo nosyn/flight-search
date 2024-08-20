@@ -105,7 +105,7 @@ const BookingSteps = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className='flex flex-col items-start gap-4 bg-gray-3 rounded-md'>
+        <div className='flex flex-col gap-4 bg-gray-3 rounded-md max-w-2xl'>
           {(currentStep.id === 'first' ||
             currentStep.id === 'second' ||
             currentStep.id === 'third') && (

@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { db } from '../libs/db';
 import { z } from 'zod';
-import { faker, th } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { ticketsTable } from '../libs/db/schema';
+import { stripeClient } from '../libs/stripe/client';
 
 export const flightTypeSchema = z.enum(['economy', 'business']);
 export const passengerGenderSchema = z.enum(['m', 'f', 'x', 'u']);
@@ -52,7 +53,22 @@ export const buyTicket = async (req: Request, res: Response) => {
         })
         .returning();
 
-      return res.status(200).json(ticket[0]);
+      // Create a PaymentIntent with the order amount and currency
+      const paymentIntent = await stripeClient.paymentIntents.create({
+        amount: 500,
+        currency: 'thb',
+        // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      });
+
+      return res.status(200).json({
+        ticket: ticket[0],
+        payment: {
+          clientSecret: paymentIntent.client_secret,
+        },
+      });
     } catch (error) {
       console.error(
         'Error while inserting into data flight ticket: ',

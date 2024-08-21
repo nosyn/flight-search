@@ -9,7 +9,7 @@ import { stripeClient } from '../libs/stripe/client';
 
 export const flightTypeSchema = z.enum(['economy', 'business']);
 export const passengerGenderSchema = z.enum(['m', 'f', 'x', 'u']);
-export const buyTicketParams = z.object({
+export const reserveTicketParams = z.object({
   departureFlightId: z.number(),
   departureFlightType: flightTypeSchema,
   departureFlightPrice: z.number(),
@@ -23,18 +23,18 @@ export const buyTicketParams = z.object({
   passengerGender: passengerGenderSchema,
 });
 
-export const buyTicket = async (req: Request, res: Response) => {
+export const reserveTicket = async (req: Request, res: Response) => {
   try {
     const { userId } = (req as WithAuthProp<Request>).auth as {
       userId: string;
     };
 
-    const { success, data, error } = await buyTicketParams.safeParseAsync(
+    const { success, data, error } = await reserveTicketParams.safeParseAsync(
       req.body
     );
 
     if (!success) {
-      console.error('Error while buying flight ticket: ', error.message);
+      console.error('Error while reserving flight ticket: ', error.message);
       res.status(400).json({
         message: `Invalid body parameters.`,
       });
@@ -72,7 +72,7 @@ export const buyTicket = async (req: Request, res: Response) => {
         'Error while inserting into data flight ticket: ',
         error.message
       );
-      throw new Error('Error while buying flight ticket');
+      throw new Error('Error while reserving flight ticket');
     }
   } catch (error) {
     return res.status(500).json({ message: 'Internal server error' });

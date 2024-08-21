@@ -1,12 +1,11 @@
-import { buyFlightTicket } from '@/lib/apis';
+import { useReserveTicket } from '@/hooks/use-reserve-ticket';
 import {
-  BuyingFlightTicketSchema,
   FlightSchema,
   FlightTypeSchema,
+  ReserveFlightTicketSchema,
 } from '@/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { defineSteps, Stepper, useStepper } from '@stepperize/react';
-import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -69,10 +68,7 @@ const BookingSteps = () => {
     },
     resolver: zodResolver(FlightTicketFormSchema),
   });
-  const mutation = useMutation({
-    mutationKey: ['buyFlightTicket'],
-    mutationFn: buyFlightTicket,
-  });
+  const mutation = useReserveTicket();
   const departureFlight = form.watch('departureFlight');
   const returnFlight = form.watch('returnFlight');
   const navigate = useNavigate();
@@ -82,7 +78,7 @@ const BookingSteps = () => {
       success,
       data: parsedData,
       error,
-    } = await BuyingFlightTicketSchema.safeParseAsync({
+    } = await ReserveFlightTicketSchema.safeParseAsync({
       departureFlightId: data.departureFlight.flight.id,
       departureFlightType: data.departureFlight.flightType,
       departureFlightPrice:
@@ -101,7 +97,7 @@ const BookingSteps = () => {
     });
 
     if (!success) {
-      console.error('Error while buying flight ticket: ', error.message);
+      console.error('Error while reserving flight ticket: ', error.message);
       return;
     }
 

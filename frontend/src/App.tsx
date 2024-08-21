@@ -3,12 +3,12 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { Layout } from './components/protected-layout';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { queryClient } from './lib/apis';
+import { reactQueryClient } from './lib/react-query-client';
 import { ChooseFlightPage } from './pages/choose-flight-page';
 import { HomePage } from './pages/home-page';
+import { NotFoundPage } from './pages/not-found-page';
 import { PaymentPage } from './pages/payment-page';
 import { TicketPage } from './pages/ticket-page';
-import { NotFoundPage } from './pages/not-found-page';
 
 const router = createBrowserRouter([
   {
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={reactQueryClient}>
       <RouterProvider router={router} />
       <Toaster />
     </QueryClientProvider>

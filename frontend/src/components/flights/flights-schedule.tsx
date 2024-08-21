@@ -1,5 +1,5 @@
 import { toast } from '@/components/ui/use-toast';
-import { useSearchQuery } from '@/hooks/useSearchQuery';
+import { useSearchQuery } from '@/hooks/use-search-query';
 import { Flight, FlightType } from '@/schemas';
 import { useStepper } from '@stepperize/react';
 import { useFormContext } from 'react-hook-form';

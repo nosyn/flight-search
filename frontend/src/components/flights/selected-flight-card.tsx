@@ -5,7 +5,6 @@ import {
   getDurationBetweenTimestamps,
 } from '@/lib/utils';
 import { Flight, FlightType } from '@/schemas';
-import { useStepper } from '@stepperize/react';
 import {
   BriefcaseBusinessIcon,
   ChevronsUpDown,
@@ -13,7 +12,6 @@ import {
   PencilIcon,
 } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
-import { Steps } from '../booking-steppers';
 import { Button } from '../ui/button';
 import { toast } from '../ui/use-toast';
 
@@ -36,7 +34,6 @@ export const SelectedFlightCard = ({
   type,
 }: SelectedFlightCardProps) => {
   const form = useFormContext();
-  const { goToStep } = useStepper<Steps>();
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -110,10 +107,8 @@ export const SelectedFlightCard = ({
               onClick={() => {
                 if (type === 'departure') {
                   form.setValue('departureFlight', null);
-                  goToStep('first');
                 } else if (type === 'return') {
                   form.setValue('returnFlight', null);
-                  goToStep('second');
                 } else {
                   toast({
                     title: 'Error when selecting ticket',

@@ -5,16 +5,14 @@ import {
   ReserveFlightTicketSchema,
 } from '@/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { defineSteps, Stepper, useStepper } from '@stepperize/react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { SelectedFlightCard } from '../flights/selected-flight-card';
+import { Button } from '../ui/button';
 import { Form } from '../ui/form';
-import { FirstStep } from './first-step';
-import { FourthStep } from './fourth-step';
-import { SecondStep } from './second-step';
-import ThirdStep from './third-step';
+import { SimpleBookingForm } from './simple-book-form';
+import { useState } from 'react';
+import { PreviewForm } from './preview-form';
 
 export const FlightTicketFormSchema = z.object({
   name: z
@@ -43,34 +41,14 @@ export const FlightTicketFormSchema = z.object({
 
 export type FlightTicketForm = z.infer<typeof FlightTicketFormSchema>;
 
-const steps = defineSteps(
-  {
-    id: 'first',
-    title: 'Departure flights',
-    description: 'Choose your departure flight',
-  },
-  {
-    id: 'second',
-    title: 'Return flights',
-    description: 'Choose your return flight',
-  },
-  { id: 'third' },
-  { id: 'fourth' }
-);
-
-export type Steps = typeof steps;
-
-const BookingSteps = () => {
-  const { when, currentStep } = useStepper<Steps>();
+export const BookingSteppers = () => {
   const form = useForm<FlightTicketForm>({
+    resolver: zodResolver(FlightTicketFormSchema),
     defaultValues: {
       name: '',
     },
-    resolver: zodResolver(FlightTicketFormSchema),
   });
   const mutation = useReserveTicketMutation();
-  const departureFlight = form.watch('departureFlight');
-  const returnFlight = form.watch('returnFlight');
   const navigate = useNavigate();
 
   async function onSubmit(data: FlightTicketForm) {
@@ -113,55 +91,16 @@ const BookingSteps = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className='flex flex-col gap-4 bg-gray-3 rounded-md max-w-2xl'>
-          {(currentStep.id === 'first' ||
-            currentStep.id === 'second' ||
-            currentStep.id === 'third') && (
-            <div>
-              {departureFlight && (
-                <SelectedFlightCard
-                  flight={departureFlight.flight}
-                  flightType={departureFlight.flightType}
-                  type='departure'
-                />
-              )}
-              {returnFlight && (
-                <SelectedFlightCard
-                  flight={returnFlight.flight}
-                  flightType={returnFlight.flightType}
-                  type='return'
-                />
-              )}
-            </div>
-          )}
-          <div>
-            {when('first').render(() => (
-              <FirstStep />
-            ))}
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className='max-w-lg space-y-2'
+      >
+        <SimpleBookingForm />
 
-            {when('second').render(() => (
-              <SecondStep />
-            ))}
-
-            {when('third').render(() => (
-              <ThirdStep />
-            ))}
-
-            {when('fourth').render(() => (
-              <FourthStep />
-            ))}
-          </div>
+        <div className='my-2'>
+          <Button type='submit'>Process to payment</Button>
         </div>
       </form>
     </Form>
-  );
-};
-
-export const BookingSteppers = () => {
-  return (
-    <Stepper steps={steps}>
-      <BookingSteps />
-    </Stepper>
   );
 };

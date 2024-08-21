@@ -104,12 +104,18 @@ export default function FlightTicket({
               {flightType === 'economy' ? (
                 <FlightTicket.SubItem
                   label='Economy Price'
-                  value={`${data.economyPrice}$`}
+                  value={new Intl.NumberFormat('th-TH', {
+                    style: 'currency',
+                    currency: 'THB',
+                  }).format(data.economyPrice)}
                 />
               ) : (
                 <FlightTicket.SubItem
                   label='Business Price'
-                  value={`${data.businessPrice}$`}
+                  value={new Intl.NumberFormat('th-TH', {
+                    style: 'currency',
+                    currency: 'THB',
+                  }).format(data.businessPrice)}
                 />
               )}
             </div>

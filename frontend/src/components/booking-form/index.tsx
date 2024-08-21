@@ -11,8 +11,6 @@ import { z } from 'zod';
 import { Button } from '../ui/button';
 import { Form } from '../ui/form';
 import { SimpleBookingForm } from './simple-book-form';
-import { useState } from 'react';
-import { PreviewForm } from './preview-form';
 
 export const FlightTicketFormSchema = z.object({
   name: z
@@ -41,7 +39,7 @@ export const FlightTicketFormSchema = z.object({
 
 export type FlightTicketForm = z.infer<typeof FlightTicketFormSchema>;
 
-export const BookingSteppers = () => {
+export const BookingForm = () => {
   const form = useForm<FlightTicketForm>({
     resolver: zodResolver(FlightTicketFormSchema),
     defaultValues: {

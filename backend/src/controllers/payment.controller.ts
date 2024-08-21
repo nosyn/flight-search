@@ -43,6 +43,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
 
         return res.send({
           clientSecret: paymentIntent.client_secret,
+          amount: payment.amount,
         });
       }
     }
@@ -55,12 +56,12 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Ticket not found' });
     }
 
-    const ticketPrice =
+    const amount =
       (ticket.departureFlightPrice + ticket.returnFlightPrice) * 100; // Minimum at least 10.00 baht.
 
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripeClient.paymentIntents.create({
-      amount: ticketPrice,
+      amount,
       currency: 'thb',
       // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
       automatic_payment_methods: {
@@ -70,7 +71,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
 
     if (!payment) {
       await db.insert(paymentTable).values({
-        amount: ticketPrice,
+        amount,
         ticketId,
         paymentIntentId: paymentIntent.id,
         paymentStatus: false,
@@ -79,6 +80,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
 
     res.send({
       clientSecret: paymentIntent.client_secret,
+      amount,
     });
   } catch (error) {
     console.error('Error while creating payment intent: ', error.message);

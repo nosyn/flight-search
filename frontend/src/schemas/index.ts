@@ -65,3 +65,11 @@ export const MeSchema = z.object({
   clerk_id: z.string(),
 });
 export type Me = z.infer<typeof MeSchema>;
+
+export const PaymentIntentSchema = z.object({
+  clientSecret: z.string(),
+  amount: z.number({
+    coerce: true,
+  }),
+});
+export type PaymentIntent = z.infer<typeof PaymentIntentSchema>;

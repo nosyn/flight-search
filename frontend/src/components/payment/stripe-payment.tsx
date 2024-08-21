@@ -11,7 +11,7 @@ import { useCreatePaymentIntentMutation } from '@/hooks/use-create-payment-inten
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function StripePayment({ ticketId }: { ticketId: string }) {
-  const { data: clientSecret, mutate } = useCreatePaymentIntentMutation({
+  const { data, mutate } = useCreatePaymentIntentMutation({
     ticketId,
   });
 
@@ -21,17 +21,17 @@ export default function StripePayment({ ticketId }: { ticketId: string }) {
 
   return (
     <div className='App'>
-      {clientSecret && (
+      {data && (
         <Elements
           options={{
             appearance: {
               theme: 'stripe',
             },
-            clientSecret,
+            clientSecret: data.clientSecret,
           }}
           stripe={stripePromise}
         >
-          <CheckoutForm ticketId={ticketId} />
+          <CheckoutForm ticketId={ticketId} amount={data.amount} />
         </Elements>
       )}
     </div>

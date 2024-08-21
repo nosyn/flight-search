@@ -1,5 +1,6 @@
 import { toast } from '@/components/ui/use-toast';
 import { API_CREATE_PAYMENT_INTENT } from '@/lib/constants';
+import { PaymentIntent, PaymentIntentSchema } from '@/schemas';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +13,7 @@ export const useCreatePaymentIntentMutation = ({
   const navigate = useNavigate();
   return useMutation({
     mutationKey: ['createPaymentIntent'],
-    mutationFn: async (): Promise<string> => {
+    mutationFn: async (): Promise<PaymentIntent | null> => {
       try {
         // Create PaymentIntent as soon as the page loads
         const response = await fetch(API_CREATE_PAYMENT_INTENT, {
@@ -24,8 +25,13 @@ export const useCreatePaymentIntentMutation = ({
 
         if (response.ok) {
           const data = await response.json();
+          const { success, data: paymentIntent } =
+            PaymentIntentSchema.safeParse(data);
 
-          return data.clientSecret;
+          if (!success) {
+            throw new Error('Invalid response data');
+          }
+          return paymentIntent;
         }
 
         if (response.status === 303) {
@@ -36,8 +42,9 @@ export const useCreatePaymentIntentMutation = ({
 
           navigate(`/ticket?ticketId=${ticketId}`);
 
-          return '';
+          return null;
         }
+
         toast({
           title: `Calling API Error with status: ${response.status}`,
         });
@@ -50,7 +57,7 @@ export const useCreatePaymentIntentMutation = ({
         console.error('Failed to reserve flight ticket', error);
       }
 
-      return '';
+      return null;
     },
   });
 };

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export const PassengerGenderSchema = z.enum(['m', 'f', 'x', 'u']);
+
 export const FlightSchema = z.object({
   id: z.number(),
   airplaneName: z.string(),
@@ -20,12 +22,14 @@ export type FlightType = z.infer<typeof FlightTypeSchema>;
 
 export const BuyingFlightTicketSchema = z.object({
   departureFlightId: z.number(),
-  departureFlightType: z.string(),
+  departureFlightType: FlightTypeSchema,
+  departureFlightPrice: z.number(),
   returnFlightId: z.number(),
-  returnFlightType: z.string(),
+  returnFlightType: FlightTypeSchema,
+  returnFlightPrice: z.number(),
   passengerName: z.string(),
   passengerDOB: z.date(),
-  passengerGender: z.string(),
+  passengerGender: PassengerGenderSchema,
 });
 
 export type BuyingFlightTicket = z.infer<typeof BuyingFlightTicketSchema>;
@@ -34,10 +38,12 @@ export const TicketSchema = z.object({
   id: z.number(),
   departureFlightId: z.number(),
   departureFlightType: FlightTypeSchema,
+  departureFlightPrice: z.number(),
   departureFlightSeatNumber: z.string(),
   departureFlightRecordLocator: z.string(),
   returnFlightId: z.number(),
   returnFlightType: FlightTypeSchema,
+  returnFlightPrice: z.number(),
   returnFlightSeatNumber: z.string(),
   returnFlightRecordLocator: z.string(),
   passengerName: z.string(),

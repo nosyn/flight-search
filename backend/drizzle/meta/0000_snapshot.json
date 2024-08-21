@@ -1,5 +1,5 @@
 {
-  "id": "8c832a70-e6be-4030-851a-2873017c1840",
+  "id": "8ee76e10-a885-4cc1-b18c-59d22b61887d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -129,6 +129,61 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.payment_table": {
+      "name": "payment_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "payment_intent_id": {
+          "name": "payment_intent_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payment_status": {
+          "name": "payment_status",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ticket_id": {
+          "name": "ticket_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "payment_table_ticket_id_tickets_table_id_fk": {
+          "name": "payment_table_ticket_id_tickets_table_id_fk",
+          "tableFrom": "payment_table",
+          "tableTo": "tickets_table",
+          "columnsFrom": [
+            "ticket_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.tickets_table": {
       "name": "tickets_table",
       "schema": "",
@@ -137,6 +192,12 @@
           "name": "id",
           "type": "serial",
           "primaryKey": true,
+          "notNull": true
+        },
+        "clerk_id": {
+          "name": "clerk_id",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
         "departure_flight_id": {
@@ -149,6 +210,12 @@
           "name": "departure_flight_type",
           "type": "flight_types",
           "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "departure_flight_price": {
+          "name": "departure_flight_price",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -174,6 +241,12 @@
           "name": "return_flight_type",
           "type": "flight_types",
           "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "return_flight_price": {
+          "name": "return_flight_price",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -207,17 +280,23 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
-        },
-        "payment_status": {
-          "name": "payment_status",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         }
       },
       "indexes": {},
       "foreignKeys": {
+        "tickets_table_clerk_id_users_table_clerk_id_fk": {
+          "name": "tickets_table_clerk_id_users_table_clerk_id_fk",
+          "tableFrom": "tickets_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "clerk_id"
+          ],
+          "columnsTo": [
+            "clerk_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "tickets_table_departure_flight_id_flights_schedule_table_id_fk": {
           "name": "tickets_table_departure_flight_id_flights_schedule_table_id_fk",
           "tableFrom": "tickets_table",
@@ -252,17 +331,11 @@
       "name": "users_table",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
         "clerk_id": {
           "name": "clerk_id",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
         "stripe_id": {
           "name": "stripe_id",
@@ -275,13 +348,6 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_table_clerk_id_unique": {
-          "name": "users_table_clerk_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "clerk_id"
-          ]
-        },
         "users_table_stripe_id_unique": {
           "name": "users_table_stripe_id_unique",
           "nullsNotDistinct": false,

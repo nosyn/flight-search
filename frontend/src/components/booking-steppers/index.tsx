@@ -77,11 +77,19 @@ const BookingSteps = () => {
       success,
       data: parsedData,
       error,
-    } = BuyingFlightTicketSchema.safeParse({
+    } = await BuyingFlightTicketSchema.safeParseAsync({
       departureFlightId: data.departureFlight.flight.id,
       departureFlightType: data.departureFlight.flightType,
+      departureFlightPrice:
+        data.departureFlight.flightType === 'business'
+          ? data.departureFlight.flight.businessPrice
+          : data.departureFlight.flight.economyPrice,
       returnFlightId: data.returnFlight.flight.id,
       returnFlightType: data.returnFlight.flightType,
+      returnFlightPrice:
+        data.returnFlight.flightType === 'business'
+          ? data.returnFlight.flight.businessPrice
+          : data.returnFlight.flight.economyPrice,
       passengerName: data.name,
       passengerDOB: data.dob,
       passengerGender: data.gender,

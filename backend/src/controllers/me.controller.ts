@@ -12,15 +12,16 @@ export const getMe = async (req: Request, res: Response) => {
     }; // We are sure there is an userId here because we use RequireAuthMiddleware. Otherwise, the middleware would have thrown an error earlier.
 
     const user = await db.query.usersTable.findFirst({
-      where: eq(usersTable.clerk_id, userId),
+      where: eq(usersTable.clerkId, userId),
       columns: {
-        id: true,
-        clerk_id: true,
+        clerkId: true,
       },
     });
 
     if (user) {
-      return res.status(200).json(user);
+      return res.status(200).json({
+        id: user.clerkId,
+      });
     }
 
     // Maybe it's a first time the user login after sign up an account with Clerk
@@ -28,22 +29,24 @@ export const getMe = async (req: Request, res: Response) => {
 
     const stripeUser = await stripeClient.customers.create({
       email: clerkUser.primaryEmailAddress?.emailAddress,
+      metadata: {
+        clerk_id: userId,
+      },
     });
 
     const newUser = (
       await db
         .insert(usersTable)
         .values({
-          clerk_id: userId,
-          stripe_id: stripeUser.id,
+          clerkId: userId,
+          stripeId: stripeUser.id,
         })
         .returning()
     )[0];
 
-    // Strip out the stripe id because we don't need it in the response
+    // Strip out the stripe_id because we don't need to expose it to client
     res.status(200).json({
-      id: newUser.id,
-      clerk_id: newUser.clerk_id,
+      id: newUser.clerkId,
     });
   } catch (error) {
     console.error('Error in getMe', error);

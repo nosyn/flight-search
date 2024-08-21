@@ -4,6 +4,9 @@ import { Pool } from 'pg';
 import { DB_CONNECTION_STRING } from '../src/libs/constants';
 import * as schema from '../src/libs/db/schema';
 
+const MAX_AIRPORTS = 10;
+const MAX_FLIGHTS_PER_DAY_FROM_EACH_AIRPORT_TO_OTHER_AIRPORT = 10;
+const IN_THE_NEXT_X_MONTH = 2;
 interface Flight {
   departureTime: Date;
   arrivalTime: Date;
@@ -44,7 +47,7 @@ const seed = async () => {
 
   console.log('Seeding airports table');
   const airports = faker.definitions.airline.airport
-    .slice(0, 10)
+    .slice(0, MAX_AIRPORTS)
     .map((airport) => ({
       iataCode: airport.iataCode,
       name: airport.name,
@@ -61,12 +64,16 @@ const seed = async () => {
   // Generate 5 flights each day for the next 1 month
   const startDate = new Date();
   const endDate = new Date();
-  endDate.setMonth(endDate.getMonth() + 1); // Set the end date to 1 months from now
+  endDate.setMonth(endDate.getMonth() + IN_THE_NEXT_X_MONTH); // Set the end date to 1 months from now
 
   const flights: Flight[] = [];
 
   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-    for (let i = 0; i < 10; i++) {
+    for (
+      let i = 0;
+      i < MAX_FLIGHTS_PER_DAY_FROM_EACH_AIRPORT_TO_OTHER_AIRPORT;
+      i++
+    ) {
       const flight = generateFlight(new Date(d));
       flights.push(flight);
     }
@@ -95,7 +102,7 @@ const seed = async () => {
           min: 150,
         });
         const businessPrice = faker.number.int({
-          max: 900,
+          max: 1500,
           min: 600,
         });
         const flightSchedule = {

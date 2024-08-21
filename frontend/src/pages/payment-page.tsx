@@ -1,5 +1,5 @@
 import StripePayment from '@/components/payment/stripe-payment';
-import { useSearchQuery } from '@/hooks/useSearchQuery';
+import { useSearchQuery } from '@/hooks/use-search-query';
 import { Navigate } from 'react-router-dom';
 
 export const PaymentPage = () => {

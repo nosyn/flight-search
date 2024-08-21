@@ -1,9 +1,9 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import { API_CREATE_PAYMENT_INTENT } from '@/lib/constants';
 import { CheckoutForm } from './checkout-form';
+import { useCreatePaymentIntentMutation } from '@/hooks/use-create-payment-intent';
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
@@ -11,35 +11,27 @@ import { CheckoutForm } from './checkout-form';
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function StripePayment({ ticketId }: { ticketId: string }) {
-  const [clientSecret, setClientSecret] = useState('');
+  const { data, mutate } = useCreatePaymentIntentMutation({
+    ticketId,
+  });
 
   useEffect(() => {
-    if (!clientSecret) {
-      // Create PaymentIntent as soon as the page loads
-      fetch(API_CREATE_PAYMENT_INTENT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ ticketId }),
-      })
-        .then((res) => res.json())
-        .then((data) => setClientSecret(data.clientSecret));
-    }
+    mutate();
   }, []);
 
   return (
     <div className='App'>
-      {clientSecret && (
+      {data && (
         <Elements
           options={{
             appearance: {
               theme: 'stripe',
             },
-            clientSecret,
+            clientSecret: data.clientSecret,
           }}
           stripe={stripePromise}
         >
-          <CheckoutForm ticketId={ticketId} />
+          <CheckoutForm ticketId={ticketId} amount={data.amount} />
         </Elements>
       )}
     </div>

@@ -9,7 +9,13 @@ import { LoaderIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { WEB_URL } from '@/lib/constants';
 
-export const CheckoutForm = ({ ticketId }: { ticketId: string }) => {
+export const CheckoutForm = ({
+  ticketId,
+  amount,
+}: {
+  ticketId: string;
+  amount: number;
+}) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -103,6 +109,13 @@ export const CheckoutForm = ({ ticketId }: { ticketId: string }) => {
             paymentMethodOrder: ['visa'],
           }}
         />
+        <p className='text-large text-gray-600 mt-2'>
+          Total amount:{' '}
+          {new Intl.NumberFormat('th-TH', {
+            style: 'currency',
+            currency: 'THB',
+          }).format(amount / 100)}
+        </p>
         <Button
           disabled={isLoading || !stripe || !elements}
           id='submit'

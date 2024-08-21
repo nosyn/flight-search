@@ -1,6 +1,6 @@
 import FlightTicket from '@/components/ticket/flight-ticket';
 import { useTicketQuery } from '@/hooks/use-ticket-query';
-import { useSearchQuery } from '@/hooks/useSearchQuery';
+import { useSearchQuery } from '@/hooks/use-search-query';
 import { Navigate } from 'react-router-dom';
 
 export const TicketPage = () => {
@@ -18,13 +18,13 @@ export const TicketPage = () => {
 export const TicketDetail = ({ ticketId }: { ticketId: string }) => {
   const { data, isLoading, error } = useTicketQuery({ ticketId });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error || !data) {
+  if (error) {
     console.error('Error loading ticket data', error);
     return <div>Error loading ticket data</div>;
+  }
+
+  if (isLoading || !data) {
+    return <div>Loading...</div>;
   }
 
   return (

@@ -1,5 +1,5 @@
-import { BookingSteppers } from '@/components/booking-steppers';
+import { BookingForm } from '@/components/booking-form';
 
 export const ChooseFlightPage = () => {
-  return <BookingSteppers />;
+  return <BookingForm />;
 };

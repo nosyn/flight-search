@@ -1,54 +1,24 @@
 import { toast } from '@/components/ui/use-toast';
-import { useSearchQuery } from '@/hooks/useSearchQuery';
-import { Flight, FlightType } from '@/schemas';
-import { useStepper } from '@stepperize/react';
-import { useFormContext } from 'react-hook-form';
-import { Navigate } from 'react-router-dom';
-import { Steps } from '../booking-steppers';
-import { FlightCard } from './flight-card';
 import { useFlightsQuery } from '@/hooks/use-flights-query';
+import { useSearchQuery } from '@/hooks/use-search-query';
+import { Navigate } from 'react-router-dom';
+import { FlightCard, FlightCardProps } from './flight-card';
 
 type ChooseFlightProps = {
   type: FlightsScheduleType;
+  onSelectTicket: FlightCardProps['selectTicket'];
 };
 
-export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
+export const FlightsSchedule = ({
+  type,
+  onSelectTicket,
+}: ChooseFlightProps) => {
   const query = useSearchQuery();
   const isDeparture = type === 'departure';
   const origin = query.get('origin') || '';
   const destination = query.get('destination') || '';
   const date =
     (isDeparture ? query.get('dateFrom') : query.get('dateTo')) || '';
-  const form = useFormContext();
-  const { currentStep, goToStep } = useStepper<Steps>();
-
-  const selectTicket = ({
-    flight,
-    flightType,
-  }: {
-    flight: Flight;
-    flightType: FlightType;
-  }) => {
-    if (currentStep.id === 'first') {
-      form.setValue('departureFlight', {
-        flight,
-        flightType,
-      });
-
-      goToStep(form.getValues('returnFlight') ? 'third' : 'second');
-    } else if (currentStep.id === 'second') {
-      form.setValue('returnFlight', {
-        flight,
-        flightType,
-      });
-      goToStep('third');
-    } else {
-      toast({
-        title: 'Error when selecting ticket',
-        description: 'Something wrong has happened.',
-      });
-    }
-  };
 
   const { isLoading, data, error } = useFlightsQuery({
     // We need to swap the origin and destination when fetching return flights
@@ -106,7 +76,7 @@ export const FlightsSchedule = ({ type }: ChooseFlightProps) => {
           <FlightCard
             key={flight.id}
             flight={flight}
-            selectTicket={selectTicket}
+            selectTicket={onSelectTicket}
           />
         ))}
       </div>

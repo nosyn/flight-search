@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
+export const AirportSchema = z.object({
+  iataCode: z.string().length(3),
+  name: z.string(),
+});
+export type Airport = z.infer<typeof AirportSchema>;
+
 export const PassengerGenderSchema = z.enum(['m', 'f', 'x', 'u']);
+export type PassengerGender = z.infer<typeof PassengerGenderSchema>;
 
 export const FlightSchema = z.object({
   id: z.number(),
@@ -20,7 +27,7 @@ export type Flight = z.infer<typeof FlightSchema>;
 export const FlightTypeSchema = z.enum(['economy', 'business']);
 export type FlightType = z.infer<typeof FlightTypeSchema>;
 
-export const BuyingFlightTicketSchema = z.object({
+export const ReserveFlightTicketSchema = z.object({
   departureFlightId: z.number(),
   departureFlightType: FlightTypeSchema,
   departureFlightPrice: z.number(),
@@ -32,7 +39,7 @@ export const BuyingFlightTicketSchema = z.object({
   passengerGender: PassengerGenderSchema,
 });
 
-export type BuyingFlightTicket = z.infer<typeof BuyingFlightTicketSchema>;
+export type ReserveFlightTicket = z.infer<typeof ReserveFlightTicketSchema>;
 
 export const TicketSchema = z.object({
   id: z.number(),
@@ -58,3 +65,11 @@ export const MeSchema = z.object({
   clerk_id: z.string(),
 });
 export type Me = z.infer<typeof MeSchema>;
+
+export const PaymentIntentSchema = z.object({
+  clientSecret: z.string(),
+  amount: z.number({
+    coerce: true,
+  }),
+});
+export type PaymentIntent = z.infer<typeof PaymentIntentSchema>;

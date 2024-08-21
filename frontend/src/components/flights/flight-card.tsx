@@ -7,7 +7,7 @@ import { Flight, FlightType } from '@/schemas';
 import { BriefcaseBusinessIcon, PiggyBankIcon, TicketIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 
-type FlightCardProps = {
+export type FlightCardProps = {
   flight: Flight;
   selectTicket: (args: { flight: Flight; flightType: FlightType }) => void;
 };

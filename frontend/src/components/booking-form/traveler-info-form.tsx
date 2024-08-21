@@ -1,4 +1,3 @@
-import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
 import { ArrowUpDownIcon, CalendarIcon, CheckIcon } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
@@ -29,40 +28,21 @@ import {
 } from '@/components/ui/popover';
 import { GENDERS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { useStepper } from '@stepperize/react';
-import { Steps } from '.';
-export default function ThirdStep() {
-  const form = useFormContext();
-  const { goToStep } = useStepper<Steps>();
+import { FlightTicketForm } from '.';
 
-  async function validateAndGoToNextStep() {
-    const isNameValid = await form.trigger('name');
-    const isDobValid = await form.trigger('dob');
-    const isGenderValid = await form.trigger('gender');
-
-    if (isNameValid && isDobValid && isGenderValid) {
-      goToStep('fourth');
-    }
-  }
+export const TravelerInfo = () => {
+  const form = useFormContext<FlightTicketForm>();
 
   return (
-    <div className='space-y-6'>
-      <div>
-        <h3 className='text-lg font-medium'>Traveler Info</h3>
-        <p className='text-sm text-muted-foreground max-w-96'>
-          The traveler information listed here must exactly match the
-          information of the government-issued photo ID that each traveler
-          presents at the airport.
-        </p>
-      </div>
-      <Separator />
-      <div className='space-y-8'>
+    <div>
+      <p className='text-lg font-medium'>Traveler Info</p>
+      <div className='space-y-4'>
         <FormField
           control={form.control}
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input placeholder='Your name' {...field} />
               </FormControl>
@@ -108,9 +88,6 @@ export default function ThirdStep() {
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>
-                Your date of birth is used to calculate your age.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -148,11 +125,9 @@ export default function ThirdStep() {
                       <CommandGroup>
                         {GENDERS.map((gender) => (
                           <CommandItem
-                            value={gender.label}
+                            value={gender.value}
                             key={gender.value}
-                            onSelect={() => {
-                              form.setValue('gender', gender.value);
-                            }}
+                            onSelect={field.onChange}
                           >
                             <CheckIcon
                               className={cn(
@@ -175,16 +150,6 @@ export default function ThirdStep() {
           )}
         />
       </div>
-      <div className='flex gap-2'>
-        <Button
-          onClick={() => {
-            validateAndGoToNextStep();
-          }}
-          type='button'
-        >
-          Confirm
-        </Button>
-      </div>
     </div>
   );
-}
+};

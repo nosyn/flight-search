@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useGetAirports } from '@/hooks/use-get-airports';
+import { useGetAirportsQuery } from '@/hooks/use-get-airports-query';
 import { cn } from '@/lib/utils';
 import {
   Popover,
@@ -27,7 +27,7 @@ import { BookingForm } from './booking-card';
 
 export function LocationInput() {
   const form = useFormContext<BookingForm>();
-  const { data: airports, isLoading } = useGetAirports();
+  const { data: airports, isLoading } = useGetAirportsQuery();
 
   return (
     <div className='flex gap-2 w-full'>

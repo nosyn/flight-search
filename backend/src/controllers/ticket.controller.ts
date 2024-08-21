@@ -128,6 +128,7 @@ export const getTicket = async (req: Request, res: Response) => {
     const paymentIntent = await stripeClient.paymentIntents.retrieve(
       payment.paymentIntentId
     );
+
     if (paymentIntent.status === 'succeeded') {
       await db
         .update(paymentTable)

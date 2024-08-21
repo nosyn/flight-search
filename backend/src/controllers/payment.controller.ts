@@ -29,8 +29,22 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       where: eq(paymentTable.ticketId, ticketId),
     });
 
-    if (payment && payment.paymentStatus) {
-      return res.redirect(303, `/ticket?ticketId=${ticketId}`); // Ticket already paid. Don't process again
+    // If payment has already exists
+    if (payment) {
+      // Case 1: Ticket already paid. Don't process again
+      if (payment.paymentStatus) {
+        return res.status(303).json({ message: 'Ticket is already paid' });
+
+        // Case 2: Return old payment secret
+      } else {
+        const paymentIntent = await stripeClient.paymentIntents.retrieve(
+          payment.paymentIntentId
+        );
+
+        return res.send({
+          clientSecret: paymentIntent.client_secret,
+        });
+      }
     }
 
     const ticket = await db.query.ticketsTable.findFirst({

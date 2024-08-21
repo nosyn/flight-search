@@ -1,8 +1,9 @@
 import { toast } from '@/components/ui/use-toast';
 import { API_FLIGHTS } from '@/lib/constants';
+import { Flight } from '@/schemas';
 import { useQuery } from '@tanstack/react-query';
 
-export type UseFlightArgs = {
+export type UseFlightsQueryArgs = {
   origin: string;
   destination: string;
   date: string;
@@ -12,10 +13,10 @@ export const useFlightsQuery = ({
   date,
   destination,
   origin,
-}: UseFlightArgs) => {
+}: UseFlightsQueryArgs) => {
   return useQuery({
     queryKey: ['flights', origin, destination, date],
-    queryFn: async ({ queryKey, pageParam }) => {
+    queryFn: async ({ queryKey }): Promise<Flight[]> => {
       const [_, origin, destination, date] = queryKey as [
         string,
         string,

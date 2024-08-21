@@ -30,7 +30,7 @@ export const FourthStep = () => {
         flightType={returnFlight.flightType}
         type='return'
       />
-      <Card>
+      <Card className='max-w-lg'>
         <CardHeader>
           <CardTitle>Traveler Information</CardTitle>
           <CardDescription>Please double check the information</CardDescription>

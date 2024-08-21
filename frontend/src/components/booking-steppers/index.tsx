@@ -1,4 +1,4 @@
-import { useReserveTicket } from '@/hooks/use-reserve-ticket';
+import { useReserveTicketMutation } from '@/hooks/use-reserve-ticket-mutation';
 import {
   FlightSchema,
   FlightTypeSchema,
@@ -68,7 +68,7 @@ const BookingSteps = () => {
     },
     resolver: zodResolver(FlightTicketFormSchema),
   });
-  const mutation = useReserveTicket();
+  const mutation = useReserveTicketMutation();
   const departureFlight = form.watch('departureFlight');
   const returnFlight = form.watch('returnFlight');
   const navigate = useNavigate();

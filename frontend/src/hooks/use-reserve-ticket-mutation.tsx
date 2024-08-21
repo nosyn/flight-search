@@ -3,7 +3,7 @@ import { API_TICKET } from '@/lib/constants';
 import { ReserveFlightTicket } from '@/schemas';
 import { useMutation } from '@tanstack/react-query';
 
-export const useReserveTicket = () => {
+export const useReserveTicketMutation = () => {
   return useMutation({
     mutationKey: ['reserveFlightTicket'],
     mutationFn: async (data: ReserveFlightTicket) => {

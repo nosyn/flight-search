@@ -3,7 +3,7 @@ import { API_AIRPORTS } from '@/lib/constants';
 import { Airport } from '@/schemas';
 import { useQuery } from '@tanstack/react-query';
 
-export const useGetAirports = () => {
+export const useGetAirportsQuery = () => {
   return useQuery({
     queryKey: ['airports'],
     queryFn: async (): Promise<Airport[]> => {

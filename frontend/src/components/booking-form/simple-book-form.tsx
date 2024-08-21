@@ -11,20 +11,29 @@ export const SimpleBookingForm = () => {
   const returnFlight = form.watch('returnFlight');
 
   return (
-    <div>
+    <div className='space-y-2'>
       {departureFlight ? (
         <SelectedFlightCard
           flight={departureFlight.flight}
           flightType={departureFlight.flightType}
+          onEdit={() => form.setValue('departureFlight', null)}
           type='departure'
         />
       ) : (
-        <FlightsSchedule
-          type={'departure'}
-          onSelectTicket={({ flight, flightType }) => {
-            form.setValue('departureFlight', { flight, flightType });
-          }}
-        />
+        <div>
+          <FlightsSchedule
+            type={'departure'}
+            onSelectTicket={({ flight, flightType }) => {
+              form.clearErrors('departureFlight');
+              form.setValue('departureFlight', { flight, flightType });
+            }}
+          />
+          {form.formState.errors.departureFlight && (
+            <p className='text-red-500 font-semibold'>
+              {form.formState.errors.departureFlight.message}
+            </p>
+          )}
+        </div>
       )}
       <Separator />
       {returnFlight ? (
@@ -32,14 +41,23 @@ export const SimpleBookingForm = () => {
           flight={returnFlight.flight}
           flightType={returnFlight.flightType}
           type='return'
+          onEdit={() => form.setValue('returnFlight', null)}
         />
       ) : (
-        <FlightsSchedule
-          type='return'
-          onSelectTicket={({ flight, flightType }) => {
-            form.setValue('returnFlight', { flight, flightType });
-          }}
-        />
+        <div>
+          <FlightsSchedule
+            type='return'
+            onSelectTicket={({ flight, flightType }) => {
+              form.clearErrors('returnFlight');
+              form.setValue('returnFlight', { flight, flightType });
+            }}
+          />
+          {form.formState.errors.returnFlight && (
+            <p className='text-red-500 font-semibold p-2 mb-4'>
+              {form.formState.errors.returnFlight.message}
+            </p>
+          )}
+        </div>
       )}
       <Separator />
       <TravelerInfo />

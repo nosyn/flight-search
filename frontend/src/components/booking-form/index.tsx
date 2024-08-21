@@ -27,14 +27,18 @@ export const FlightTicketFormSchema = z.object({
     required_error: 'A date of birth is required.',
   }),
   gender: z.enum(['m', 'f', 'x', 'u']),
-  departureFlight: z.object({
-    flight: FlightSchema,
-    flightType: FlightTypeSchema,
-  }),
-  returnFlight: z.object({
-    flight: FlightSchema,
-    flightType: FlightTypeSchema,
-  }),
+  departureFlight: z
+    .object({
+      flight: FlightSchema,
+      flightType: FlightTypeSchema,
+    })
+    .nullable(),
+  returnFlight: z
+    .object({
+      flight: FlightSchema,
+      flightType: FlightTypeSchema,
+    })
+    .nullable(),
 });
 
 export type FlightTicketForm = z.infer<typeof FlightTicketFormSchema>;
@@ -50,6 +54,22 @@ export const BookingForm = () => {
   const navigate = useNavigate();
 
   async function onSubmit(data: FlightTicketForm) {
+    if (!data.departureFlight) {
+      form.setError('departureFlight', {
+        type: 'manual',
+        message: 'Departure flight is required.',
+      });
+      return;
+    }
+
+    if (!data.returnFlight) {
+      form.setError('returnFlight', {
+        type: 'manual',
+        message: 'Return flight is required.',
+      });
+      return;
+    }
+
     const {
       success,
       data: parsedData,

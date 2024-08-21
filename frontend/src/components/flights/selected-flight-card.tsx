@@ -8,12 +8,10 @@ import { Flight, FlightType } from '@/schemas';
 import {
   BriefcaseBusinessIcon,
   ChevronsUpDown,
-  PiggyBankIcon,
   PencilIcon,
+  PiggyBankIcon,
 } from 'lucide-react';
-import { useFormContext } from 'react-hook-form';
 import { Button } from '../ui/button';
-import { toast } from '../ui/use-toast';
 
 import {
   Collapsible,
@@ -26,14 +24,15 @@ type SelectedFlightCardProps = {
   flight: Flight;
   flightType: FlightType;
   type: FlightsScheduleType;
+  onEdit: () => void;
 };
 
 export const SelectedFlightCard = ({
   flight,
   flightType,
   type,
+  onEdit,
 }: SelectedFlightCardProps) => {
-  const form = useFormContext();
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -104,17 +103,9 @@ export const SelectedFlightCard = ({
             <Button
               className='justify-items-end'
               size='lg'
+              type='button'
               onClick={() => {
-                if (type === 'departure') {
-                  form.setValue('departureFlight', null);
-                } else if (type === 'return') {
-                  form.setValue('returnFlight', null);
-                } else {
-                  toast({
-                    title: 'Error when selecting ticket',
-                    description: 'Something wrong has happened.',
-                  });
-                }
+                onEdit();
               }}
             >
               <PencilIcon className='h-6 w-6' />

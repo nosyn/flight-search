@@ -41,7 +41,8 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Ticket not found' });
     }
 
-    const ticketPrice = ticket.departureFlightPrice + ticket.returnFlightPrice;
+    const ticketPrice =
+      (ticket.departureFlightPrice + ticket.returnFlightPrice) * 100; // Minimum at least 10.00 baht.
 
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripeClient.paymentIntents.create({

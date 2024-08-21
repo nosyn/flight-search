@@ -52,10 +52,15 @@ export const genderEnum = pgEnum('genders', ['m', 'f', 'x', 'u']);
 export const flightTypeEnum = pgEnum('flight_types', ['economy', 'business']);
 export const ticketsTable = pgTable('tickets_table', {
   id: serial('id').primaryKey(),
+  clerkId: text('clerk_id')
+    .notNull()
+    .references(() => usersTable.clerkId),
+  // We normalize these columns to reduce the number of calls to the database
   departureFlightId: integer('departure_flight_id')
     .notNull()
     .references(() => flightsScheduleTable.id),
   departureFlightType: flightTypeEnum('departure_flight_type').notNull(),
+  departureFlightPrice: integer('departure_flight_price').notNull(),
   departureFlightSeatNumber: varchar('departure_flight_seat_number', {
     length: 3,
   }).notNull(),
@@ -66,6 +71,7 @@ export const ticketsTable = pgTable('tickets_table', {
     .notNull()
     .references(() => flightsScheduleTable.id),
   returnFlightType: flightTypeEnum('return_flight_type').notNull(),
+  returnFlightPrice: integer('return_flight_price').notNull(),
   returnFlightSeatNumber: varchar('return_flight_seat_number', {
     length: 3,
   }).notNull(),
@@ -75,15 +81,25 @@ export const ticketsTable = pgTable('tickets_table', {
   passengerName: text('passenger_name').notNull(),
   passengerDOB: timestamp('passenger_dob', { withTimezone: true }).notNull(),
   passengerGender: genderEnum('passenger_gender'),
-  payment_status: boolean('payment_status').default(false).notNull(),
 });
 
 /**
  * Users Table
  */
-// `clerk_id`, `username`, and `email` are coming from Clerk
 export const usersTable = pgTable('users_table', {
+  clerkId: text('clerk_id').primaryKey(),
+  stripeId: text('stripe_id').unique(),
+});
+
+/**
+ * Payment Table
+ */
+export const paymentTable = pgTable('payment_table', {
   id: serial('id').primaryKey(),
-  clerk_id: text('clerk_id').unique(),
-  stripe_id: text('stripe_id').unique(),
+  paymentIntentId: text('payment_intent_id').notNull(),
+  paymentStatus: boolean('payment_status').default(false).notNull(),
+  amount: integer('amount').notNull(),
+  ticketId: integer('ticket_id')
+    .notNull()
+    .references(() => ticketsTable.id),
 });

@@ -1,5 +1,4 @@
 import { type ClassValue, clsx } from 'clsx';
-import { time } from 'console';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -27,12 +26,8 @@ export const getDurationBetweenTimestamps = ({
   timestamp1: string;
   timestamp2: string;
 }) => {
-  // Define two timestamps
-  const startTimestamp = new Date(timestamp1);
-  const endTimestamp = new Date(timestamp2);
-
   // Calculate the duration in milliseconds
-  const durationInMilliseconds = endTimestamp - startTimestamp;
+  const durationInMilliseconds = new Date(timestamp2) - new Date(timestamp1);
 
   // Convert the duration into hours, minutes, and seconds
   const millisecondsInSecond = 1000;

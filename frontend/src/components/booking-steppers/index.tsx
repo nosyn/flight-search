@@ -19,7 +19,9 @@ import ThirdStep from './third-step';
 
 export const FlightTicketFormSchema = z.object({
   name: z
-    .string()
+    .string({
+      coerce: true,
+    })
     .min(2, {
       message: 'Name must be at least 2 characters.',
     })
@@ -62,6 +64,9 @@ export type Steps = typeof steps;
 const BookingSteps = () => {
   const { when, currentStep } = useStepper<Steps>();
   const form = useForm<FlightTicketForm>({
+    defaultValues: {
+      name: '',
+    },
     resolver: zodResolver(FlightTicketFormSchema),
   });
   const mutation = useMutation({

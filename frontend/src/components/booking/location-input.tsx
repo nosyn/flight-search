@@ -13,25 +13,21 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useGetAirports } from '@/hooks/use-get-airports';
 import { cn } from '@/lib/utils';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@radix-ui/react-popover';
-import { useQuery } from '@tanstack/react-query';
 import { ArrowRightLeftIcon, Check } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 import { Button } from '../ui/button';
-import { getAirports } from '@/lib/apis';
+import { BookingForm } from './booking-card';
 
 export function LocationInput() {
-  const form = useFormContext();
-  const { data: airports, isLoading } = useQuery({
-    queryKey: ['airports'],
-    queryFn: getAirports,
-    initialData: [],
-  });
+  const form = useFormContext<BookingForm>();
+  const { data: airports, isLoading } = useGetAirports();
 
   return (
     <div className='flex gap-2 w-full'>
@@ -54,11 +50,7 @@ export function LocationInput() {
                         !field.value && 'text-muted-foreground'
                       )}
                     >
-                      {field.value
-                        ? airports.find(
-                            (airport) => airport.iataCode === field.value
-                          ).iataCode
-                        : 'Select origin'}
+                      {field.value || 'Select origin'}
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
@@ -68,25 +60,27 @@ export function LocationInput() {
                     <CommandList>
                       <CommandEmpty>No airport found.</CommandEmpty>
                       <CommandGroup>
-                        {airports.map((airport) => (
-                          <CommandItem
-                            value={airport.iataCode}
-                            key={airport.iataCode}
-                            onSelect={() => {
-                              form.setValue('origin', airport.iataCode);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                airport.iataCode === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {`${airport.iataCode} - ${airport.name}`}
-                          </CommandItem>
-                        ))}
+                        {airports
+                          .filter(
+                            (a) => a.iataCode !== form.getValues('destination')
+                          )
+                          .map((airport) => (
+                            <CommandItem
+                              value={airport.iataCode}
+                              key={airport.iataCode}
+                              onSelect={field.onChange}
+                            >
+                              <Check
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  airport.iataCode === field.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {`${airport.iataCode} - ${airport.name}`}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </CommandList>
                   </Command>
@@ -119,11 +113,7 @@ export function LocationInput() {
                         !field.value && 'text-muted-foreground'
                       )}
                     >
-                      {field.value
-                        ? airports.find(
-                            (airport) => airport.iataCode === field.value
-                          ).iataCode
-                        : 'Select destination'}
+                      {field.value || 'Select destination'}
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
@@ -133,25 +123,27 @@ export function LocationInput() {
                     <CommandList>
                       <CommandEmpty>No airports found.</CommandEmpty>
                       <CommandGroup>
-                        {airports.map((airport) => (
-                          <CommandItem
-                            value={airport.iataCode}
-                            key={airport.iataCode}
-                            onSelect={() => {
-                              form.setValue('destination', airport.iataCode);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                airport.iataCode === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {`${airport.iataCode} - ${airport.name}`}
-                          </CommandItem>
-                        ))}
+                        {airports
+                          .filter(
+                            (a) => a.iataCode !== form.getValues('origin')
+                          )
+                          .map((airport) => (
+                            <CommandItem
+                              value={airport.iataCode}
+                              key={airport.iataCode}
+                              onSelect={field.onChange}
+                            >
+                              <Check
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  airport.iataCode === field.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {`${airport.iataCode} - ${airport.name}`}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </CommandList>
                   </Command>

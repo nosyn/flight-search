@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
+export const AirportSchema = z.object({
+  iataCode: z.string().length(3),
+  name: z.string(),
+});
+export type Airport = z.infer<typeof AirportSchema>;
+
 export const PassengerGenderSchema = z.enum(['m', 'f', 'x', 'u']);
+export type PassengerGender = z.infer<typeof PassengerGenderSchema>;
 
 export const FlightSchema = z.object({
   id: z.number(),

@@ -6,12 +6,7 @@ import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { FormField, FormItem, FormLabel } from '@/components/ui/form';
 import {
   Popover,
   PopoverContent,
@@ -19,18 +14,18 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useFormContext } from 'react-hook-form';
+import { BookingForm } from './booking-card';
 
 export const RoundtripCalendar = ({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) => {
-  const form = useFormContext();
-
+  const form = useFormContext<BookingForm>();
   return (
     <div>
       <FormField
         control={form.control}
         name='date'
-        render={({ field }) => (
+        render={({ field, formState }) => (
           <FormItem className='flex flex-col'>
             <FormLabel>Dates*</FormLabel>
             <div className={cn('grid gap-2', className)}>
@@ -63,7 +58,7 @@ export const RoundtripCalendar = ({
                   <Calendar
                     initialFocus
                     mode='range'
-                    defaultMonth={field.value?.from}
+                    defaultMonth={field.value.from}
                     selected={field.value}
                     onSelect={field.onChange}
                     numberOfMonths={2}
@@ -72,7 +67,10 @@ export const RoundtripCalendar = ({
                 </PopoverContent>
               </Popover>
             </div>
-            <FormMessage />
+            <p className='text-red-600'>
+              {formState.errors.date?.from?.message ||
+                formState.errors.date?.to?.message}
+            </p>
           </FormItem>
         )}
       />

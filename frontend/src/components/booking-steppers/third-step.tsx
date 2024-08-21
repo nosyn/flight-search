@@ -30,17 +30,14 @@ import {
 import { GENDERS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { useStepper } from '@stepperize/react';
-import { Steps } from '.';
+import { FlightTicketForm, Steps } from '.';
+
 export default function ThirdStep() {
-  const form = useFormContext();
+  const form = useFormContext<FlightTicketForm>();
   const { goToStep } = useStepper<Steps>();
 
   async function validateAndGoToNextStep() {
-    const isNameValid = await form.trigger('name');
-    const isDobValid = await form.trigger('dob');
-    const isGenderValid = await form.trigger('gender');
-
-    if (isNameValid && isDobValid && isGenderValid) {
+    if (await form.trigger()) {
       goToStep('fourth');
     }
   }
@@ -62,10 +59,13 @@ export default function ThirdStep() {
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input placeholder='Your name' {...field} />
               </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -108,9 +108,6 @@ export default function ThirdStep() {
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>
-                Your date of birth is used to calculate your age.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

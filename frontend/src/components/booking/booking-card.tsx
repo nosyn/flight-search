@@ -9,30 +9,39 @@ import { LocationInput } from './location-input';
 import { useNavigate } from 'react-router-dom';
 import { getSearchParamsFormattedDate } from '@/lib/utils';
 
-const FormSchema = z.object({
+export const BookingFormSchema = z.object({
   origin: z
     .string({
       required_error: 'Origin required',
     })
-    .length(3, 'Incorrect origin.'),
+    .length(3, 'Origin required.'),
   destination: z
     .string({
       required_error: 'Destination required',
     })
-    .length(3, 'Incorrect destination.'),
-  date: z.object({
-    from: z.date({
-      required_error: 'A flight departure day is required.',
+    .length(3, 'Destination required.'),
+  date: z
+    .object({
+      from: z.date({
+        required_error: 'A flight departure day is required.',
+        invalid_type_error: 'Invalid departure date',
+      }),
+      to: z.date({
+        required_error: 'A flight return day is required.',
+        invalid_type_error: 'Invalid return date',
+      }),
+    })
+    .required({
+      from: true,
+      to: true,
     }),
-    to: z.date({
-      required_error: 'A flight return day is required.',
-    }),
-  }),
 });
 
+export type BookingForm = z.infer<typeof BookingFormSchema>;
+
 export const BookingCard = () => {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<BookingForm>({
+    resolver: zodResolver(BookingFormSchema),
     defaultValues: {
       origin: '',
       destination: '',
@@ -44,7 +53,7 @@ export const BookingCard = () => {
   });
   const navigate = useNavigate();
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onSubmit(data: BookingForm) {
     navigate({
       pathname: '/choose-flight',
       search: new URLSearchParams({

@@ -27,7 +27,8 @@ export const getDurationBetweenTimestamps = ({
   timestamp2: string;
 }) => {
   // Calculate the duration in milliseconds
-  const durationInMilliseconds = new Date(timestamp2) - new Date(timestamp1);
+  const durationInMilliseconds =
+    Number(new Date(timestamp2)) - Number(new Date(timestamp1));
 
   // Convert the duration into hours, minutes, and seconds
   const millisecondsInSecond = 1000;

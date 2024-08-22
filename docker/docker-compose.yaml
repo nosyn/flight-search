@@ -1,5 +1,5 @@
 networks:
-  database:
+  database-nw:
     driver: bridge
 
 services:
@@ -8,7 +8,7 @@ services:
     image: 'bitnami/postgresql:16.3.0'
     restart: 'always'
     networks:
-      - database
+      - database-nw
     ports:
       - 5432:5432
     volumes:
@@ -32,6 +32,8 @@ services:
     container_name: backend
     image: 'nosyn97/flight-search-backend:latest'
     restart: 'always'
+    networks:
+      - database-nw
     env_file:
       - ../backend/.env
     labels:

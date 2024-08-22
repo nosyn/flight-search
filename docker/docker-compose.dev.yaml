@@ -1,7 +1,7 @@
 name: dev-flight-search
 
 networks:
-  database:
+  database-nw:
     driver: bridge
 
 services:
@@ -9,7 +9,7 @@ services:
     container_name: flight-search-database
     image: 'bitnami/postgresql:16.3.0'
     networks:
-      - database
+      - database-nw
     ports:
       - 5432:5432
     volumes:
@@ -23,7 +23,7 @@ services:
     container_name: flight-search-backend
     image: 'node:22'
     networks:
-      - database
+      - database-nw
     ports:
       - 8000:8000
     volumes:

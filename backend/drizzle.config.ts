@@ -1,5 +1,7 @@
+import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
-import { DB_CONNECTION_STRING } from './src/libs/constants';
+
+const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING as string;
 
 export default defineConfig({
   dialect: 'postgresql',

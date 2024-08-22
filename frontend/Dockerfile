@@ -18,9 +18,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules /app/node_modules
 COPY . .
 
-# Copy .env.example to be .env
-COPY .env.example .env
-
 RUN npm run build;
 
 # Production image, copy all the files and run next
@@ -28,7 +25,7 @@ FROM base AS runner
 
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 COPY --from=builder /app/dist dist
 COPY --from=builder /app/ecosystem.config.cjs ecosystem.config.cjs

@@ -38,3 +38,5 @@ next-env.d.ts
 tool-output/
 dist
 dist-scripts
+
+logs

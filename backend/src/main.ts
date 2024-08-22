@@ -4,6 +4,7 @@ import express from 'express';
 import morgan from 'morgan';
 import { __DEV__, HOST, PORT, CORS_ORIGIN } from './libs/constants';
 import { apiRouter } from './routes';
+import { logger } from 'libs/logger';
 
 const main = async () => {
   const app = express();
@@ -48,4 +49,12 @@ const main = async () => {
   });
 };
 
-main();
+main().catch((error) => {
+  logger.error('Unepxected error: ' + error);
+  process.exit(1);
+});
+
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM signal received.');
+  process.exit(0);
+});

@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { db } from '../libs/db';
 import { paymentTable, ticketsTable } from '../libs/db/schema';
 import { stripeClient } from '../libs/stripe/client';
+import { logger } from 'libs/logger';
 
 export const flightTypeSchema = z.enum(['economy', 'business']);
 export const passengerGenderSchema = z.enum(['m', 'f', 'x', 'u']);
@@ -29,12 +30,11 @@ export const reserveTicket = async (req: Request, res: Response) => {
       userId: string;
     };
 
-    const { success, data, error } = await reserveTicketParams.safeParseAsync(
+    const { success, data } = await reserveTicketParams.safeParseAsync(
       req.body
     );
 
     if (!success) {
-      console.error('Error while reserving flight ticket: ', error.message);
       res.status(400).json({
         message: `Invalid body parameters.`,
       });
@@ -68,10 +68,7 @@ export const reserveTicket = async (req: Request, res: Response) => {
 
       return res.status(200).json(ticket[0]);
     } catch (error) {
-      console.error(
-        'Error while inserting into data flight ticket: ',
-        error.message
-      );
+      logger.error('reserveTicket: ', error);
       throw new Error('Error while reserving flight ticket');
     }
   } catch (error) {
@@ -145,7 +142,7 @@ export const getTicket = async (req: Request, res: Response) => {
       message: 'You have not paid for the ticket.',
     }); //
   } catch (error) {
-    console.error('Error while getting ticket: ', error);
+    logger.error('getTicket: ', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };

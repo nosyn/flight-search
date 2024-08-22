@@ -4,6 +4,7 @@ import { clerkClient, type WithAuthProp } from '@clerk/clerk-sdk-node';
 import { eq } from 'drizzle-orm';
 import { usersTable } from '../libs/db/schema';
 import { stripeClient } from '../libs/stripe/client';
+import { logger } from 'libs/logger';
 
 export const getMe = async (req: Request, res: Response) => {
   try {
@@ -49,7 +50,7 @@ export const getMe = async (req: Request, res: Response) => {
       id: newUser.clerkId,
     });
   } catch (error) {
-    console.error('Error in getMe', error);
+    logger.error('getMe', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };

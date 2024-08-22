@@ -17,6 +17,8 @@ services:
       - POSTGRESQL_DATABASE=flight-search-db
       - POSTGRESQL_USERNAME=db_user # Change this value in production
       - POSTGRESQL_PASSWORD=db_password # Change this value in production
+    labels:
+      - 'traefik.enable=false' # Add this line to exclude PostgreSQL from Traefik
 
   frontend:
     container_name: frontend

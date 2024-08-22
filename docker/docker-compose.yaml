@@ -1,0 +1,68 @@
+networks:
+  database:
+    driver: bridge
+
+services:
+  postgresql:
+    container_name: flight-search-database
+    image: 'bitnami/postgresql:16.3.0'
+    restart: 'always'
+    networks:
+      - database
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volumes/postgresql-persistence:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_DATABASE=flight-search-db
+      - POSTGRESQL_USERNAME=db_user # Change this value in production
+      - POSTGRESQL_PASSWORD=db_password # Change this value in production
+
+  frontend:
+    container_name: flight-search-frontend
+    image: 'nosyn97/flight-search-frontend:latest'
+    restart: 'always'
+    labels:
+      - 'traefik.http.routers.frontend.rule=Host(`flight-search.nosyn.dev`)'
+      - 'traefik.http.routers.frontend.tls.certresolver=leresolver'
+      - 'traefik.http.routers.frontend.entrypoints=websecure'
+      - 'traefik.http.services.frontend.loadbalancer.server.port=5173'
+
+  backend:
+    container_name: flight-search-backend
+    image: 'nosyn97/flight-search-backend:latest'
+    restart: 'always'
+    env_file:
+      - ../backend/.env
+    labels:
+      - 'traefik.http.routers.backend.rule=Host(`flight-search.nosyn.dev`) && PathPrefix(`/api`)'
+      - 'traefik.http.routers.backend.tls.certresolver=leresolver'
+      - 'traefik.http.routers.backend.entrypoints=websecure'
+      - 'traefik.http.services.backend.loadbalancer.server.port=8000'
+
+  traefik:
+    image: 'traefik:v2.11'
+    container_name: 'traefik'
+    restart: 'always'
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker
+      - --api
+      - --certificatesresolvers.leresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.leresolver.acme.email=nyenson1997@gmail.com
+      - --certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.leresolver.acme.tlschallenge=true
+    labels:
+      # global redirect to https
+      - 'traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)'
+      - 'traefik.http.routers.http-catchall.entrypoints=web'
+      - 'traefik.http.routers.http-catchall.middlewares=redirect-to-https'
+      # middleware redirect
+      - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
+    ports:
+      - '443:443'
+      - '80:80'
+    volumes:
+      - './volumes/letsencrypt:/letsencrypt'
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'

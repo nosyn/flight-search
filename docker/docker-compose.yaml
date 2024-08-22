@@ -4,7 +4,7 @@ networks:
 
 services:
   postgresql:
-    container_name: flight-search-database
+    container_name: database
     image: 'bitnami/postgresql:16.3.0'
     restart: 'always'
     networks:
@@ -19,7 +19,7 @@ services:
       - POSTGRESQL_PASSWORD=db_password # Change this value in production
 
   frontend:
-    container_name: flight-search-frontend
+    container_name: frontend
     image: 'nosyn97/flight-search-frontend:latest'
     restart: 'always'
     labels:
@@ -29,7 +29,7 @@ services:
       - 'traefik.http.services.frontend.loadbalancer.server.port=5173'
 
   backend:
-    container_name: flight-search-backend
+    container_name: backend
     image: 'nosyn97/flight-search-backend:latest'
     restart: 'always'
     env_file:

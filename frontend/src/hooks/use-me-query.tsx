@@ -6,31 +6,29 @@ import { useQuery } from '@tanstack/react-query';
 export const useMeQuery = () => {
   return useQuery({
     queryKey: ['me'],
-    queryFn: () => {
-      return async (): Promise<Me | null> => {
-        try {
-          const response = await fetch(`${API_ME}`, {
-            credentials: 'include',
-          });
+    queryFn: async (): Promise<Me | null> => {
+      try {
+        const response = await fetch(`${API_ME}`, {
+          credentials: 'include',
+        });
 
-          if (response.ok) {
-            const me = await response.json();
-            return me;
-          }
-
-          toast({
-            title: `Calling API Error with status: ${response.status}`,
-          });
-        } catch (error) {
-          toast({
-            title: 'Calling API Error',
-            description: 'Failed to fetch ticket. See console.log for detail',
-          });
-          console.error('Failed to fetch ticket', error);
+        if (response.ok) {
+          const me = await response.json();
+          return me;
         }
 
-        return null;
-      };
+        toast({
+          title: `Calling API Error with status: ${response.status}`,
+        });
+      } catch (error) {
+        toast({
+          title: 'Calling API Error',
+          description: 'Failed to fetch ticket. See console.log for detail',
+        });
+        console.error('Failed to fetch ticket', error);
+      }
+
+      return null;
     },
   });
 };

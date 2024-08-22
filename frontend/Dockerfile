@@ -18,9 +18,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules /app/node_modules
 COPY . .
 
-# Copy .env.example to be .env
-COPY .env.example .env
-
 RUN npm run build;
 
 # Production image, copy all the files and run next

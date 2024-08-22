@@ -1,7 +1,12 @@
 import { toast } from '@/components/ui/use-toast';
 import { useFlightsQuery } from '@/hooks/use-flights-query';
 import { useSearchQuery } from '@/hooks/use-search-query';
-import { Navigate } from 'react-router-dom';
+import {
+  convertToDateFromSearchParam,
+  getSearchParamsFormattedDate,
+} from '@/lib/utils';
+import { Navigate, useSearchParams } from 'react-router-dom';
+import { Calendar } from '../ui/calendar';
 import { FlightCard, FlightCardProps } from './flight-card';
 
 type ChooseFlightProps = {
@@ -17,8 +22,9 @@ export const FlightsSchedule = ({
   const isDeparture = type === 'departure';
   const origin = query.get('origin') || '';
   const destination = query.get('destination') || '';
-  const date =
-    (isDeparture ? query.get('dateFrom') : query.get('dateTo')) || '';
+  const dateKey = isDeparture ? 'dateFrom' : 'dateTo';
+  const date = query.get(dateKey) || '';
+  const [_, setSearchParams] = useSearchParams();
 
   const { isLoading, data, error } = useFlightsQuery({
     // We need to swap the origin and destination when fetching return flights
@@ -60,7 +66,36 @@ export const FlightsSchedule = ({
   }
 
   if (data.length === 0) {
-    return <div>Couldn't find any flights. Please search for new one</div>;
+    const formattedDateFrom =
+      convertToDateFromSearchParam(query.get('dateFrom') || '') || new Date();
+
+    return (
+      <div>
+        <p className='text-xl font-semibold'>
+          Couldn't find any flights for date {date}. Please search for new one
+        </p>
+        <Calendar
+          mode='single'
+          selected={formattedDateFrom}
+          onSelect={(d) => {
+            if (d) {
+              const newDate = getSearchParamsFormattedDate(d);
+              setSearchParams((searchParams) => {
+                searchParams.set(dateKey, newDate);
+                return searchParams;
+              });
+            }
+          }}
+          fromDate={
+            new Date(formattedDateFrom.setDate(formattedDateFrom.getDate() + 1))
+          }
+          disabled={(date) =>
+            date < new Date() || date < new Date('1900-01-01')
+          }
+          initialFocus
+        />
+      </div>
+    );
   }
 
   return (

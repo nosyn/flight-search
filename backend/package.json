@@ -16,7 +16,7 @@
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate",
     "db:studio": "npx drizzle-kit studio",
-    "db:seed": "npx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts"
   },
   "author": {
     "name": "Son Nguyen",

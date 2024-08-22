@@ -2,20 +2,34 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Backend Services For Flight Search",
-  "main": "src/main.ts",
+  "exports": {
+    "main": "./dist/main.js",
+    "seed": "./dist-scripts/seed.js"
+  },
   "scripts": {
     "dev": "tsx --watch src/main.ts",
+    "build": "npm run build:server && npm run build:scripts",
+    "build:server": "rimraf dist && pkgroll --target=esnext",
+    "build:scripts": "rimraf dist-scripts && npx pkgroll --dist=dist-scripts --src=./scripts --target=esnext",
+    "start": "node dist/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate",
     "db:studio": "npx drizzle-kit studio",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "npm run build:scripts && node dist-scripts/seed.js"
   },
-  "author": "Son Nguyen",
+  "author": {
+    "name": "Son Nguyen",
+    "email": "nyenson1997@gmail.com",
+    "url": "https://blog.nosyn.dev"
+  },
   "license": "MIT",
   "dependencies": {
     "@clerk/clerk-sdk-node": "^5.0.27",
     "@faker-js/faker": "^8.4.1",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.33.0",
@@ -27,11 +41,10 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/morgan": "^1.9.9",
     "@types/node": "^22.3.0",
     "drizzle-kit": "^0.24.0",
+    "pkgroll": "^2.4.2",
+    "rimraf": "^6.0.1",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4"
   }

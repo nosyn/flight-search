@@ -71,7 +71,7 @@ export const FlightsSchedule = ({
           : 'Select return flights'}
       </div>
       <div className='text-xl font-semibold'>Date: {date}</div>
-      <div className='max-h-[540px] overflow-auto pr-6'>
+      <div className='max-h-[540px] overflow-auto pr-6 border-2'>
         {data.map((flight) => (
           <FlightCard
             key={flight.id}

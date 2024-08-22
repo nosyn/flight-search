@@ -6,6 +6,7 @@ networks:
 
 services:
   postgresql:
+    container_name: flight-search-database
     image: 'bitnami/postgresql:16.3.0'
     networks:
       - database
@@ -17,3 +18,31 @@ services:
       - POSTGRESQL_DATABASE=flight-search-db
       - POSTGRESQL_USERNAME=db_user
       - POSTGRESQL_PASSWORD=db_password
+
+  backend:
+    container_name: flight-search-backend
+    image: 'node:22'
+    networks:
+      - database
+    ports:
+      - 8000:8000
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    env_file:
+      - ../backend/.env
+
+  frontend:
+    container_name: flight-search-frontend
+    image: 'node:22'
+    ports:
+      - 5173:5173
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    env_file:
+      - ../frontend/.env

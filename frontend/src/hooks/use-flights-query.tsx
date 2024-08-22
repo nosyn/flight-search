@@ -48,7 +48,7 @@ export const useFlightsQuery = ({
         console.error('Failed to fetch flights', error);
       }
 
-      return null;
+      return [];
     },
     enabled: !!origin && !!destination && !!date,
   });

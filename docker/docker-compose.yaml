@@ -17,8 +17,8 @@ services:
       - POSTGRESQL_DATABASE=flight-search-db
       - POSTGRESQL_USERNAME=db_user # Change this value in production
       - POSTGRESQL_PASSWORD=db_password # Change this value in production
-    labels:
-      - 'traefik.enable=false' # Add this line to exclude PostgreSQL from Traefik
+    # labels:
+    #   - 'traefik.enable=false' # Add this line to exclude PostgreSQL from Traefik
 
   frontend:
     container_name: frontend
@@ -34,6 +34,8 @@ services:
     container_name: backend
     image: 'nosyn97/flight-search-backend:latest'
     restart: 'always'
+    depends_on:
+      - postgresql
     networks:
       - database-nw
     env_file:
@@ -48,6 +50,10 @@ services:
     image: 'traefik:v2.11'
     container_name: 'traefik'
     restart: 'always'
+    depends_on:
+      - postgresql
+      - backend
+      - frontend
     command:
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443

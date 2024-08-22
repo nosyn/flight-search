@@ -31,8 +31,6 @@ services:
       - /app/node_modules
     working_dir: /app
     command: sh -c "npm install && npm run dev"
-    env_file:
-      - ../backend/.env
 
   frontend:
     container_name: flight-search-frontend
@@ -44,5 +42,3 @@ services:
       - /app/node_modules
     working_dir: /app
     command: sh -c "npm install && npm run dev"
-    env_file:
-      - ../frontend/.env

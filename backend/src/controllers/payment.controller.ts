@@ -4,6 +4,7 @@ import { db } from '../libs/db';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import { paymentTable, ticketsTable } from '../libs/db/schema';
+import { logger } from 'libs/logger';
 
 const PaymentIntentParamsSchema = z.object({
   ticketId: z.number({
@@ -83,7 +84,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       amount,
     });
   } catch (error) {
-    console.error('Error while creating payment intent: ', error.message);
+    logger.error('createPaymentIntent: ', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };

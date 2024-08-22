@@ -1,4 +1,4 @@
-import express, { Request, Response, Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
 
 // Routes
@@ -7,6 +7,7 @@ import { flightsRouter } from './flights.route';
 import { ticketRouter } from './ticket.route';
 import { paymentRouter } from './payment';
 import { meRouter } from './me.route';
+import { logger } from 'libs/logger';
 
 export const apiRouter: Router = express.Router();
 
@@ -27,6 +28,7 @@ apiRouter.use(
     // See the Middleware options section for more details
   })
 );
+
 apiRouter.use('/airports', airportsRouter);
 apiRouter.use('/flights', flightsRouter);
 apiRouter.use('/ticket', ticketRouter);
@@ -34,7 +36,7 @@ apiRouter.use('/payment', paymentRouter);
 apiRouter.use('/me', meRouter);
 
 // Error handling
-apiRouter.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(401).send('Unauthenticated!');
+apiRouter.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  logger.error(err.stack);
+  res.status(401).send({ message: 'Unauthenticated!' });
 });

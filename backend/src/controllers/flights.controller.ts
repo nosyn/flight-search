@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { db } from '../libs/db';
 import { flightsScheduleTable } from '../libs/db/schema';
 import { getDateTimestampFromQuery } from '../libs/utils';
+import { logger } from 'libs/logger';
 
 const flightsQuery = z.object({
   origin: z.string(),
@@ -13,10 +14,9 @@ const flightsQuery = z.object({
 
 export const getFlights = async (req: Request, res: Response) => {
   try {
-    const { success, error, data } = flightsQuery.safeParse(req.query);
+    const { success, data } = flightsQuery.safeParse(req.query);
 
     if (!success) {
-      console.error('Error while getting flights: ', error.message);
       res.status(400).json({
         message: `Invalid query parameters.`,
       });
@@ -35,7 +35,7 @@ export const getFlights = async (req: Request, res: Response) => {
 
     res.status(200).json(flights);
   } catch (error) {
-    console.error('Error while getting flights: ', error);
+    logger.error('getFlights: ', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -64,7 +64,7 @@ export const getFlight = async (req: Request, res: Response) => {
 
     res.status(200).json(flight);
   } catch (error) {
-    console.error('Error while getting flights: ', error);
+    logger.error('getFlight: ', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };

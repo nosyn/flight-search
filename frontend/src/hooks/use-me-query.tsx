@@ -23,9 +23,9 @@ export const useMeQuery = () => {
       } catch (error) {
         toast({
           title: 'Calling API Error',
-          description: 'Failed to fetch ticket. See console.log for detail',
+          description: 'Failed to fetch me. See console.log for detail',
         });
-        console.error('Failed to fetch ticket', error);
+        console.error('Failed to fetch me', error);
       }
 
       return null;

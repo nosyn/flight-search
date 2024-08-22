@@ -41,7 +41,7 @@ const main = async () => {
   }
 
   // Router
-  app.use('/', apiRouter);
+  app.use('/api', apiRouter);
 
   app.listen(PORT, HOST, () => {
     console.log(`Server is up and ready at ${HOST}:${PORT} 🚀🚀🚀`);

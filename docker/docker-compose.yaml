@@ -9,8 +9,6 @@ services:
     restart: 'always'
     networks:
       - database-nw
-    ports:
-      - 5432:5432
     volumes:
       - ./volumes/postgresql-persistence:/bitnami/postgresql
     environment:
@@ -23,10 +21,10 @@ services:
     image: 'nosyn97/flight-search-frontend:latest'
     restart: 'always'
     labels:
-      - 'traefik.http.routers.flight-search-frontend.rule=Host(`flight-search.nosyn.dev`)'
-      - 'traefik.http.routers.flight-search-frontend.tls.certresolver=leresolver'
-      - 'traefik.http.routers.flight-search-frontend.entrypoints=websecure'
-      - 'traefik.http.services.flight-search-frontend.loadbalancer.server.port=5173'
+      - 'traefik.http.routers.frontend.rule=Host(`flight-search.nosyn.dev`)'
+      - 'traefik.http.routers.frontend.tls.certresolver=leresolver'
+      - 'traefik.http.routers.frontend.entrypoints=websecure'
+      - 'traefik.http.services.frontend.loadbalancer.server.port=5173'
 
   backend:
     container_name: flight-search-backend
@@ -39,10 +37,10 @@ services:
     env_file:
       - ../backend/.env
     labels:
-      - 'traefik.http.routers.flight-search-backend.rule=Host(`flight-search.nosyn.dev`) && PathPrefix(`/api`)'
-      - 'traefik.http.routers.flight-search-backend.tls.certresolver=leresolver'
-      - 'traefik.http.routers.flight-search-backend.entrypoints=websecure'
-      - 'traefik.http.services.flight-search-backend.loadbalancer.server.port=8000'
+      - 'traefik.http.routers.backend.rule=Host(`flight-search.nosyn.dev`) && PathPrefix(`/api`)'
+      - 'traefik.http.routers.backend.tls.certresolver=leresolver'
+      - 'traefik.http.routers.backend.entrypoints=websecure'
+      - 'traefik.http.services.backend.loadbalancer.server.port=8000'
 
   traefik:
     image: 'traefik:v2.11'

@@ -32,6 +32,25 @@ function generateFlight(day: Date): Flight {
   };
 }
 
+const truncateTable = async (tableName: string) => {
+  const client = new Pool({
+    connectionString: DB_CONNECTION_STRING,
+  });
+
+  try {
+    console.log(`Truncating table ${tableName} with cascade...`);
+
+    const truncateTableQuery = `TRUNCATE TABLE ${tableName} CASCADE`;
+    await client.query(truncateTableQuery);
+
+    console.log(`Table ${tableName} truncated successfully.`);
+  } catch (error) {
+    console.error(`Error truncating table ${tableName}:`, error);
+  } finally {
+    await client.end();
+  }
+};
+
 const seed = async () => {
   console.log('Seeding database 🌱🌱🌱');
 
@@ -42,8 +61,8 @@ const seed = async () => {
     schema,
   });
 
-  await db.delete(schema.flightsScheduleTable);
-  await db.delete(schema.airportsTable);
+  await truncateTable('flights_schedule_table'); // Replace with your actual table name
+  await truncateTable('airports_table'); // Replace with your actual table name
 
   console.log('Seeding airports table');
   const airports = faker.definitions.airline.airport

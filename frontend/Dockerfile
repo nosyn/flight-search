@@ -28,7 +28,7 @@ FROM base AS runner
 
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 COPY --from=builder /app/dist dist
 COPY --from=builder /app/ecosystem.config.cjs ecosystem.config.cjs

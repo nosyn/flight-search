@@ -1,6 +1,6 @@
+import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import { faker } from '@faker-js/faker';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
 import { DB_CONNECTION_STRING } from '../src/libs/constants';
 import * as schema from '../src/libs/db/schema';
 
@@ -33,15 +33,12 @@ function generateFlight(day: Date): Flight {
 }
 
 const truncateTable = async (tableName: string) => {
-  const client = new Pool({
-    connectionString: DB_CONNECTION_STRING,
-  });
+  const client = postgres(DB_CONNECTION_STRING);
 
   try {
-    console.log(`Truncating table ${tableName} with cascade...`);
+    console.log(`Truncating table tableName with cascade...`);
 
-    const truncateTableQuery = `TRUNCATE TABLE ${tableName} CASCADE`;
-    await client.query(truncateTableQuery);
+    await client`TRUNCATE TABLE ${client(tableName)} CASCADE`;
 
     console.log(`Table ${tableName} truncated successfully.`);
   } catch (error) {
@@ -52,11 +49,10 @@ const truncateTable = async (tableName: string) => {
 };
 
 const seed = async () => {
+  const client = postgres(DB_CONNECTION_STRING);
+
   console.log('Seeding database 🌱🌱🌱');
 
-  const client = new Pool({
-    connectionString: DB_CONNECTION_STRING,
-  });
   const db = drizzle(client, {
     schema,
   });
@@ -147,6 +143,8 @@ const seed = async () => {
       }
     }
   }
+
+  client.end();
 };
 
 seed().finally(() => {

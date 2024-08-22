@@ -18,7 +18,11 @@
     "db:studio": "npx drizzle-kit studio",
     "db:seed": "npm run build:scripts && node dist-scripts/seed.js"
   },
-  "author": "Son Nguyen",
+  "author": {
+    "name": "Son Nguyen",
+    "email": "nyenson1997@gmail.com",
+    "url": "https://blog.nosyn.dev"
+  },
   "license": "MIT",
   "dependencies": {
     "@clerk/clerk-sdk-node": "^5.0.27",

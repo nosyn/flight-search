@@ -17,8 +17,6 @@ services:
       - POSTGRESQL_DATABASE=flight-search-db
       - POSTGRESQL_USERNAME=db_user # Change this value in production
       - POSTGRESQL_PASSWORD=db_password # Change this value in production
-    # labels:
-    #   - 'traefik.enable=false' # Add this line to exclude PostgreSQL from Traefik
 
   frontend:
     container_name: frontend
@@ -62,7 +60,8 @@ services:
       - --certificatesresolvers.leresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory
       - --certificatesresolvers.leresolver.acme.email=nyenson1997@gmail.com
       - --certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json
-      - --certificatesresolvers.leresolver.acme.tlschallenge=true
+      - --certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web # Use http-01 challenge
+
     labels:
       # global redirect to https
       - 'traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)'

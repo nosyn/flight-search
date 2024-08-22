@@ -60,7 +60,7 @@ services:
       - --certificatesresolvers.leresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory
       - --certificatesresolvers.leresolver.acme.email=nyenson1997@gmail.com
       - --certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json
-      - --certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web # Use http-01 challenge
+      - --certificatesresolvers.leresolver.acme.tlschallenge=true
 
     labels:
       # global redirect to https

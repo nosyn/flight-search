@@ -1,14 +1,8 @@
-networks:
-  database-nw:
-    driver: bridge
-
 services:
   postgresql:
     container_name: flight-search-database
     image: 'bitnami/postgresql:16.3.0'
     restart: 'always'
-    networks:
-      - database-nw
     volumes:
       - ./volumes/postgresql-persistence:/bitnami/postgresql
     environment:
@@ -32,8 +26,6 @@ services:
     restart: 'always'
     depends_on:
       - postgresql
-    networks:
-      - database-nw
     env_file:
       - ../backend/.env
     labels:
@@ -46,20 +38,15 @@ services:
     image: 'traefik:v2.11'
     container_name: 'traefik'
     restart: 'always'
-    depends_on:
-      - postgresql
-      - backend
-      - frontend
     command:
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --providers.docker
-      - --api
+      - --api.dashboard=true
       - --certificatesresolvers.leresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory
       - --certificatesresolvers.leresolver.acme.email=nyenson1997@gmail.com
       - --certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.leresolver.acme.tlschallenge=true
-
     labels:
       # global redirect to https
       - 'traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)'
@@ -67,9 +54,18 @@ services:
       - 'traefik.http.routers.http-catchall.middlewares=redirect-to-https'
       # middleware redirect
       - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
+      # dashboard
+      - 'traefik.http.routers.traefik.rule=Host(`traefik.nosyn.dev`)'
+      - 'traefik.http.routers.traefik.service=api@internal'
+      - 'traefik.http.routers.traefik.entrypoints=websecure'
+      - 'traefik.http.routers.traefik.tls.certresolver=leresolver'
+      - 'traefik.http.routers.traefik.middlewares=auth'
+      # basic auth middleware
+      - 'traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$TRIay/qN$$UWmX.qPrkP0RWxHpUy4TF0' # Replace with your own hashed password
     ports:
       - '443:443'
       - '80:80'
+      - '8080:8080'
     volumes:
       - './volumes/letsencrypt:/letsencrypt'
       - '/var/run/docker.sock:/var/run/docker.sock:ro'

@@ -6,6 +6,9 @@ export const AirportSchema = z.object({
 });
 export type Airport = z.infer<typeof AirportSchema>;
 
+export const AirportsSchema = AirportSchema.array();
+export type Airports = z.infer<typeof AirportsSchema>;
+
 export const PassengerGenderSchema = z.enum(['m', 'f', 'x', 'u']);
 export type PassengerGender = z.infer<typeof PassengerGenderSchema>;
 
@@ -23,6 +26,9 @@ export const FlightSchema = z.object({
   businessPrice: z.number(),
 });
 export type Flight = z.infer<typeof FlightSchema>;
+
+export const FlightsSchema = FlightSchema.array();
+export type Flights = z.infer<typeof FlightsSchema>;
 
 export const FlightTypeSchema = z.enum(['economy', 'business']);
 export type FlightType = z.infer<typeof FlightTypeSchema>;

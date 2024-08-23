@@ -35,10 +35,7 @@ export const reserveTicket = async (req: Request, res: Response) => {
     );
 
     if (!success) {
-      res.status(400).json({
-        message: `Invalid body parameters.`,
-      });
-      return;
+      return res.status(400).send('Invalid body parameters.');
     }
 
     try {
@@ -72,7 +69,7 @@ export const reserveTicket = async (req: Request, res: Response) => {
       throw new Error('Error while reserving flight ticket');
     }
   } catch (error) {
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).send('Internal server error');
   }
 };
 
@@ -85,8 +82,7 @@ export const getTicket = async (req: Request, res: Response) => {
     const ticketId = parseInt(req.params.id);
 
     if (!ticketId) {
-      res.status(400).send(`Invalid ticket id parameter.`);
-      return;
+      return res.status(400).send('Invalid ticket id parameter.');
     }
 
     const ticket = await db.query.ticketsTable.findFirst({
@@ -97,8 +93,7 @@ export const getTicket = async (req: Request, res: Response) => {
     });
 
     if (!ticket) {
-      res.status(400).send(`Ticket not found.`);
-      return;
+      return res.status(400).send('Ticket not found.');
     }
 
     const payment = await db.query.paymentTable.findFirst({

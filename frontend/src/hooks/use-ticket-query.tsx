@@ -1,6 +1,6 @@
 import { toast } from '@/components/ui/use-toast';
 import { API_TICKET } from '@/lib/constants';
-import { ErrorResponse } from '@/lib/react-query-client';
+import { HttpErrorResponse } from '@/lib/react-query-client';
 import { Ticket, TicketSchema } from '@/schemas';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -12,10 +12,10 @@ export type UseGetTicketArgs = {
 export const useTicketQuery = ({ ticketId }: UseGetTicketArgs) => {
   const navigate = useNavigate();
 
-  return useQuery<Promise<Ticket>, ErrorResponse, Ticket>({
+  return useQuery<Ticket, HttpErrorResponse, Ticket>({
     queryKey: ['ticket', ticketId],
     retry: false,
-    queryFn: async (): Promise<Ticket> => {
+    queryFn: async () => {
       const response = await fetch(`${API_TICKET}/${ticketId}`, {
         credentials: 'include',
       });
@@ -30,7 +30,7 @@ export const useTicketQuery = ({ ticketId }: UseGetTicketArgs) => {
           return ticket;
         }
 
-        throw new ErrorResponse('Invalid ticket data', response.status);
+        throw new HttpErrorResponse('Invalid ticket data', response.status);
       }
 
       const errorMessage = (await response.text()) as string;
@@ -43,7 +43,7 @@ export const useTicketQuery = ({ ticketId }: UseGetTicketArgs) => {
         navigate(`/payment?ticketId=${ticketId}`);
       }
 
-      throw new ErrorResponse(errorMessage, response.status);
+      throw new HttpErrorResponse(errorMessage, response.status);
     },
   });
 };

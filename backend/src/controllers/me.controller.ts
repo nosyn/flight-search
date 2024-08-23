@@ -46,11 +46,11 @@ export const getMe = async (req: Request, res: Response) => {
     )[0];
 
     // Strip out the stripe_id because we don't need to expose it to client
-    res.status(200).json({
+    return res.status(200).json({
       id: newUser.clerkId,
     });
   } catch (error) {
     logger.error('getMe', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).send('Internal server error');
   }
 };

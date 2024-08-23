@@ -27,7 +27,15 @@ import { BookingForm } from './booking-card';
 
 export function LocationInput() {
   const form = useFormContext<BookingForm>();
-  const { data: airports, isLoading } = useGetAirportsQuery();
+  const { data: airports, isLoading, error } = useGetAirportsQuery();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error.message}</div>;
+  }
 
   return (
     <div className='flex gap-2 w-full'>

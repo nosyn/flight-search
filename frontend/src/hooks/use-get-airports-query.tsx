@@ -1,35 +1,32 @@
-import { toast } from '@/components/ui/use-toast';
 import { API_AIRPORTS } from '@/lib/constants';
-import { Airport } from '@/schemas';
+import { HttpErrorResponse } from '@/lib/react-query-client';
+import { Airports, AirportsSchema } from '@/schemas';
 import { useQuery } from '@tanstack/react-query';
 
 export const useGetAirportsQuery = () => {
-  return useQuery({
+  return useQuery<Airports, HttpErrorResponse, Airports>({
     queryKey: ['airports'],
-    queryFn: async (): Promise<Airport[]> => {
-      try {
-        const response = await fetch(API_AIRPORTS, {
-          credentials: 'include',
-        });
+    queryFn: async () => {
+      const response = await fetch(API_AIRPORTS, {
+        credentials: 'include',
+      });
 
-        if (response.ok) {
-          const airports = await response.json();
+      if (response.ok) {
+        const data = await response.json();
+        const { success, data: airports } = await AirportsSchema.safeParseAsync(
+          data
+        );
 
+        if (success) {
           return airports;
         }
 
-        toast({
-          title: `Calling API Error with status: ${response.status}`,
-        });
-      } catch (error) {
-        toast({
-          title: 'Calling API Error',
-          description: 'Failed to fetch airports. See console.log for detail',
-        });
-        console.error('Failed to fetch airports', error);
+        throw new HttpErrorResponse('Invalid ticket data', response.status);
       }
 
-      return [];
+      const errorMessage = (await response.text()) as string;
+
+      throw new HttpErrorResponse(errorMessage, response.status);
     },
     initialData: [],
   });

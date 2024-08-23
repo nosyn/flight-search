@@ -1,6 +1,7 @@
 import { toast } from '@/components/ui/use-toast';
-import { API_TICKET } from '@/lib/constants';
-import { Ticket } from '@/schemas';
+import { API_TICKETS } from '@/lib/constants';
+import { HttpErrorResponse } from '@/lib/react-query-client';
+import { Ticket, TicketSchema } from '@/schemas';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,41 +12,38 @@ export type UseGetTicketArgs = {
 export const useTicketQuery = ({ ticketId }: UseGetTicketArgs) => {
   const navigate = useNavigate();
 
-  return useQuery({
+  return useQuery<Ticket, HttpErrorResponse, Ticket>({
     queryKey: ['ticket', ticketId],
-    queryFn: async (): Promise<Ticket | null> => {
-      try {
-        const response = await fetch(`${API_TICKET}/${ticketId}`, {
-          credentials: 'include',
-        });
+    retry: false,
+    queryFn: async () => {
+      const response = await fetch(`${API_TICKETS}/${ticketId}`, {
+        credentials: 'include',
+      });
 
-        if (response.ok) {
-          const ticket = await response.json();
+      if (response.ok) {
+        const data = await response.json();
+        const { success, data: ticket } = await TicketSchema.safeParseAsync(
+          data
+        );
+
+        if (success) {
           return ticket;
         }
 
-        if (response.status === 402) {
-          toast({
-            title: 'Payment Required',
-            description: 'Please complete the payment to view the ticket',
-          });
-
-          navigate(`/payment?ticketId=${ticketId}`);
-          return null;
-        }
-
-        toast({
-          title: `Calling API Error with status: ${response.status}`,
-        });
-      } catch (error) {
-        toast({
-          title: 'Calling API Error',
-          description: 'Failed to fetch ticket. See console.log for detail',
-        });
-        console.error('Failed to fetch ticket', error);
+        throw new HttpErrorResponse('Invalid ticket data', response.status);
       }
 
-      return null;
+      const errorMessage = (await response.text()) as string;
+
+      if (response.status === 402) {
+        toast({
+          title: 'Payment Required',
+          description: 'Please complete the payment to view the ticket',
+        });
+        navigate(`/payment?ticketId=${ticketId}`);
+      }
+
+      throw new HttpErrorResponse(errorMessage, response.status);
     },
   });
 };

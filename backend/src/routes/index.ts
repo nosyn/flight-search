@@ -4,7 +4,7 @@ import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
 // Routes
 import { airportsRouter } from './airports.route';
 import { flightsRouter } from './flights.route';
-import { ticketRouter } from './ticket.route';
+import { ticketsRouter } from './tickets.route';
 import { paymentRouter } from './payment';
 import { meRouter } from './me.route';
 import { logger } from 'libs/logger';
@@ -31,7 +31,7 @@ apiRouter.use(
 
 apiRouter.use('/airports', airportsRouter);
 apiRouter.use('/flights', flightsRouter);
-apiRouter.use('/ticket', ticketRouter);
+apiRouter.use('/tickets', ticketsRouter);
 apiRouter.use('/payment', paymentRouter);
 apiRouter.use('/me', meRouter);
 

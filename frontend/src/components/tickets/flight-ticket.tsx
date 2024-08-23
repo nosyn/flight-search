@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useFlightQuery } from '@/hooks/use-flight-query';
 import { FlightType } from '@/schemas';
+import { ErrorContainer } from '../error-container';
 
 type FlightTicketProps = {
   flightId: number;
@@ -12,7 +13,7 @@ type FlightTicketProps = {
   passengerGender: string;
 };
 
-export default function FlightTicket({
+export const FlightTicket = ({
   flightId,
   flightType,
   flightRecordLocator,
@@ -20,7 +21,7 @@ export default function FlightTicket({
   passengerName,
   passengerGender,
   passengerDOB,
-}: FlightTicketProps) {
+}: FlightTicketProps) => {
   const { data, isLoading, error } = useFlightQuery({
     flightId: String(flightId),
   });
@@ -29,9 +30,12 @@ export default function FlightTicket({
     return <div>Loading flight ticket</div>;
   }
 
-  if (error || !data) {
-    console.error('Error while loading flight ticket', error);
-    return <div>Error while loading flight ticket</div>;
+  if (error) {
+    return <ErrorContainer message={error.message} />;
+  }
+
+  if (!data) {
+    return <ErrorContainer />;
   }
 
   return (
@@ -124,7 +128,7 @@ export default function FlightTicket({
       </CardContent>
     </Card>
   );
-}
+};
 
 FlightTicket.SubTitle = ({ subTitle }: { subTitle: string }) => {
   return (

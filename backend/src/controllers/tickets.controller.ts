@@ -35,10 +35,7 @@ export const reserveTicket = async (req: Request, res: Response) => {
     );
 
     if (!success) {
-      res.status(400).json({
-        message: `Invalid body parameters.`,
-      });
-      return;
+      return res.status(400).send('Invalid body parameters.');
     }
 
     try {
@@ -72,7 +69,7 @@ export const reserveTicket = async (req: Request, res: Response) => {
       throw new Error('Error while reserving flight ticket');
     }
   } catch (error) {
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).send('Internal server error');
   }
 };
 
@@ -85,10 +82,7 @@ export const getTicket = async (req: Request, res: Response) => {
     const ticketId = parseInt(req.params.id);
 
     if (!ticketId) {
-      res.status(400).json({
-        message: `Invalid ticket id parameter.`,
-      });
-      return;
+      return res.status(400).send('Invalid ticket id parameter.');
     }
 
     const ticket = await db.query.ticketsTable.findFirst({
@@ -99,10 +93,7 @@ export const getTicket = async (req: Request, res: Response) => {
     });
 
     if (!ticket) {
-      res.status(400).json({
-        message: `Ticket not found.`,
-      });
-      return;
+      return res.status(400).send('Ticket not found.');
     }
 
     const payment = await db.query.paymentTable.findFirst({
@@ -111,9 +102,7 @@ export const getTicket = async (req: Request, res: Response) => {
 
     if (!payment) {
       // Note: Maybe we can create a payment intent here and redirect the user to the payment page. For now, we will just return an error.
-      return res.status(400).json({
-        message: 'No payment method found for this ticket.',
-      });
+      return res.status(400).send('No payment method found for this ticket.');
     }
 
     if (payment.paymentStatus) {
@@ -138,11 +127,27 @@ export const getTicket = async (req: Request, res: Response) => {
     }
 
     // Case 2: Navigate to payment page
-    return res.status(402).json({
-      message: 'You have not paid for the ticket.',
-    }); //
+    return res.status(402).send('You have not paid for the ticket.'); //
   } catch (error) {
     logger.error('getTicket: ', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).send('Internal server error');
+  }
+};
+
+export const getTickets = async (req: Request, res: Response) => {
+  try {
+    const { userId } = (req as WithAuthProp<Request>).auth as {
+      userId: string;
+    };
+
+    const tickets = await db.query.ticketsTable.findMany({
+      where: and(eq(ticketsTable.clerkId, userId)),
+      with: {},
+    });
+
+    return res.status(200).json(tickets);
+  } catch (error) {
+    logger.error('getTickets: ', error);
+    return res.status(500).send('Internal server error');
   }
 };

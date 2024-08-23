@@ -50,7 +50,7 @@ export const BookingForm = () => {
       name: '',
     },
   });
-  const mutation = useReserveTicketMutation();
+  const { mutateAsync } = useReserveTicketMutation();
   const navigate = useNavigate();
 
   async function onSubmit(data: FlightTicketForm) {
@@ -97,7 +97,7 @@ export const BookingForm = () => {
       return;
     }
 
-    const ticket = await mutation.mutateAsync(parsedData);
+    const ticket = await mutateAsync(parsedData);
 
     navigate({
       pathname: '/payment',

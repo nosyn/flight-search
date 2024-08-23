@@ -1,6 +1,6 @@
-import { toast } from '@/components/ui/use-toast';
 import { API_FLIGHTS } from '@/lib/constants';
-import { Flight } from '@/schemas';
+import { HttpErrorResponse } from '@/lib/react-query-client';
+import { Flight, FlightSchema } from '@/schemas';
 import { useQuery } from '@tanstack/react-query';
 
 export type UseFlightQueryArgs = {
@@ -8,32 +8,30 @@ export type UseFlightQueryArgs = {
 };
 
 export const useFlightQuery = ({ flightId }: UseFlightQueryArgs) => {
-  return useQuery<Flight | null>({
+  return useQuery<Flight, HttpErrorResponse, Flight>({
     queryKey: ['flights', flightId],
-    queryFn: async ({ queryKey }): Promise<Flight | null> => {
+    queryFn: async ({ queryKey }) => {
       const [_, flightId] = queryKey as [string, string];
-      try {
-        const response = await fetch(`${API_FLIGHTS}/${flightId}`, {
-          credentials: 'include',
-        });
+      const response = await fetch(`${API_FLIGHTS}/${flightId}`, {
+        credentials: 'include',
+      });
 
-        if (response.ok) {
-          const flight = await response.json();
+      if (response.ok) {
+        const data = await response.json();
+        const { success, data: flight } = await FlightSchema.safeParseAsync(
+          data
+        );
+
+        if (success) {
           return flight;
         }
 
-        toast({
-          title: `Calling API Error with status: ${response.status}`,
-        });
-      } catch (error) {
-        toast({
-          title: 'Calling API Error',
-          description: 'Failed to fetch flights. See console.log for detail',
-        });
-        console.error('Failed to fetch flights', error);
+        throw new HttpErrorResponse('Invalid flight data', response.status);
       }
 
-      return null;
+      const errorMessage = (await response.text()) as string;
+
+      throw new HttpErrorResponse(errorMessage, response.status);
     },
   });
 };

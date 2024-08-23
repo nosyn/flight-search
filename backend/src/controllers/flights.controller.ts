@@ -17,10 +17,7 @@ export const getFlights = async (req: Request, res: Response) => {
     const { success, data } = flightsQuery.safeParse(req.query);
 
     if (!success) {
-      res.status(400).json({
-        message: `Invalid query parameters.`,
-      });
-      return;
+      return res.status(400).send('Invalid query parameters.');
     }
 
     const dateFromTimestamp = getDateTimestampFromQuery(data.date);
@@ -36,7 +33,7 @@ export const getFlights = async (req: Request, res: Response) => {
     res.status(200).json(flights);
   } catch (error) {
     logger.error('getFlights: ', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).send('Internal server error');
   }
 };
 
@@ -45,10 +42,7 @@ export const getFlight = async (req: Request, res: Response) => {
     const flightId = parseInt(req.params.id);
 
     if (!flightId) {
-      res.status(400).json({
-        message: `Invalid flight id parameter.`,
-      });
-      return;
+      return res.status(400).send('Invalid flight id parameter.');
     }
 
     const flight = await db.query.flightsScheduleTable.findFirst({
@@ -56,15 +50,12 @@ export const getFlight = async (req: Request, res: Response) => {
     });
 
     if (!flight) {
-      res.status(404).json({
-        message: `Flight not found.`,
-      });
-      return;
+      return res.status(400).send(`Flight not found.`);
     }
 
     res.status(200).json(flight);
   } catch (error) {
     logger.error('getFlight: ', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).send('Internal server error');
   }
 };

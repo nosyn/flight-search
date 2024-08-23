@@ -8,7 +8,7 @@ root_dir=$script_path/..
 echo "Applying migration and seeding database"
 
 cd "$root_dir/backend"
-npm run db:migarate
+npm run db:migrate
 npm run db:seed
 
 # Execute npm commands inside the Docker container

@@ -5,6 +5,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const convertToDateFromSearchParam = (
+  dateString: string
+): Date | null => {
+  if (!dateString) {
+    return null;
+  }
+
+  const [day, month, year] = dateString.split('-').map(Number);
+  return new Date(year, month - 1, day); // Month is zero-based in JavaScript Date
+};
+
 export const getSearchParamsFormattedDate = (date: Date) => {
   return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
 };

@@ -3,7 +3,8 @@ import { loadStripe } from '@stripe/stripe-js';
 import { useEffect } from 'react';
 
 import { CheckoutForm } from './checkout-form';
-import { useCreatePaymentIntentMutation } from '@/hooks/use-create-payment-intent';
+import { useCreatePaymentIntentMutation } from '@/hooks/use-create-payment-intent-mutation';
+import { ErrorContainer } from '../error-container';
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
@@ -11,13 +12,21 @@ import { useCreatePaymentIntentMutation } from '@/hooks/use-create-payment-inten
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function StripePayment({ ticketId }: { ticketId: string }) {
-  const { data, mutate } = useCreatePaymentIntentMutation({
+  const { data, mutate, isPending, error } = useCreatePaymentIntentMutation({
     ticketId,
   });
 
   useEffect(() => {
     mutate();
   }, []);
+
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <ErrorContainer message={error.message} />;
+  }
 
   return (
     <div className='App'>

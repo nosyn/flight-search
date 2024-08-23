@@ -4,7 +4,7 @@ import {
   getDateTimeFromTimestamp,
   getDurationBetweenTimestamps,
 } from '@/lib/utils';
-import { Flight, FlightType } from '@/schemas';
+import { Flight, FlightsSchedule, FlightType } from '@/schemas';
 import {
   BriefcaseBusinessIcon,
   ChevronsUpDown,
@@ -23,7 +23,7 @@ import { useState } from 'react';
 type SelectedFlightCardProps = {
   flight: Flight;
   flightType: FlightType;
-  type: FlightsScheduleType;
+  type: FlightsSchedule;
   onEdit: () => void;
 };
 
@@ -58,6 +58,9 @@ export const SelectedFlightCard = ({
         <Card className='p-4 max-w-lg flex-grow my-2'>
           <div className='flex items-center justify-between'>
             <div className='flex flex-col flex-grow'>
+              <div className='text-sm font-semibold'>
+                Date: {new Date(flight.departureTime).toLocaleDateString()}
+              </div>
               <div className='flex justify-between flex-grow'>
                 <div className='text-3xl font-bold'>
                   {getDateTimeFromTimestamp(flight.departureTime)}

@@ -1,27 +1,28 @@
-import { API_AIRPORTS } from '@/lib/constants';
+import { API_TICKETS } from '@/lib/constants';
 import { HttpErrorResponse } from '@/lib/react-query-client';
-import { Airports, AirportsSchema } from '@/schemas';
+import { Tickets, TicketsSchema } from '@/schemas';
 import { useQuery } from '@tanstack/react-query';
 
-export const useGetAirportsQuery = () => {
-  return useQuery<Airports, HttpErrorResponse, Airports>({
-    queryKey: ['airports'],
+export const useTicketsQuery = () => {
+  return useQuery<Tickets, HttpErrorResponse, Tickets>({
+    queryKey: ['tickets'],
+    retry: false,
     queryFn: async () => {
-      const response = await fetch(API_AIRPORTS, {
+      const response = await fetch(`${API_TICKETS}`, {
         credentials: 'include',
       });
 
       if (response.ok) {
         const data = await response.json();
-        const { success, data: airports } = await AirportsSchema.safeParseAsync(
+        const { success, data: tickets } = await TicketsSchema.safeParseAsync(
           data
         );
 
         if (success) {
-          return airports;
+          return tickets;
         }
 
-        throw new HttpErrorResponse('Invalid ticket data', response.status);
+        throw new HttpErrorResponse('Invalid tickets data', response.status);
       }
 
       const errorMessage = (await response.text()) as string;

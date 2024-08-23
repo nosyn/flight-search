@@ -19,9 +19,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
     );
 
     if (!success) {
-      return res
-        .status(400)
-        .json({ message: 'Invalid request body for ticketId' });
+      return res.status(400).send('Invalid request body for ticketId');
     }
 
     const { ticketId } = data;
@@ -34,7 +32,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
     if (payment) {
       // Case 1: Ticket already paid. Don't process again
       if (payment.paymentStatus) {
-        return res.status(303).json({ message: 'Ticket is already paid' });
+        return res.status(303).send('Ticket is already paid');
 
         // Case 2: Return old payment secret
       } else {
@@ -42,7 +40,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
           payment.paymentIntentId
         );
 
-        return res.send({
+        return res.status(200).json({
           clientSecret: paymentIntent.client_secret,
           amount: payment.amount,
         });
@@ -54,7 +52,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
     });
 
     if (!ticket) {
-      return res.status(404).json({ message: 'Ticket not found' });
+      return res.status(400).send('No payment found for the given ticket');
     }
 
     const amount =
@@ -85,6 +83,6 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
     });
   } catch (error) {
     logger.error('createPaymentIntent: ', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).send('Internal server error');
   }
 };

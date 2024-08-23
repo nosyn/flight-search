@@ -9,7 +9,7 @@ const IN_THE_NEXT_X_MONTH = 2;
 const DB_CONNECTION_STRING =
   process.env.NODE_ENV === 'production' && process.env.DB_CONNECTION_STRING
     ? process.env.DB_CONNECTION_STRING
-    : `postgresql://db_user:db_password@$localhost:5432/flight-search-db`;
+    : `postgresql://db_user:db_password@localhost:5432/flight-search-db`;
 
 interface Flight {
   departureTime: Date;

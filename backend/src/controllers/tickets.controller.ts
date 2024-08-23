@@ -142,7 +142,13 @@ export const getTickets = async (req: Request, res: Response) => {
 
     const tickets = await db.query.ticketsTable.findMany({
       where: and(eq(ticketsTable.clerkId, userId)),
-      with: {},
+      with: {
+        payment: {
+          columns: {
+            paymentStatus: true,
+          },
+        },
+      },
     });
 
     return res.status(200).json(tickets);

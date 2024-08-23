@@ -66,7 +66,11 @@ export const TicketSchema = z.object({
 });
 export type Ticket = z.infer<typeof TicketSchema>;
 
-export const TicketsSchema = TicketSchema.array();
+export const TicketsSchema = TicketSchema.extend({
+  payment: z.object({
+    paymentStatus: z.boolean(),
+  }),
+}).array();
 export type Tickets = z.infer<typeof TicketsSchema>;
 
 export const MeSchema = z.object({

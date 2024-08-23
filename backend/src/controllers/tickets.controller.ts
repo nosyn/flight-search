@@ -133,3 +133,21 @@ export const getTicket = async (req: Request, res: Response) => {
     return res.status(500).send('Internal server error');
   }
 };
+
+export const getTickets = async (req: Request, res: Response) => {
+  try {
+    const { userId } = (req as WithAuthProp<Request>).auth as {
+      userId: string;
+    };
+
+    const tickets = await db.query.ticketsTable.findMany({
+      where: and(eq(ticketsTable.clerkId, userId)),
+      with: {},
+    });
+
+    return res.status(200).json(tickets);
+  } catch (error) {
+    logger.error('getTickets: ', error);
+    return res.status(500).send('Internal server error');
+  }
+};

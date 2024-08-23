@@ -13,7 +13,7 @@ type FlightTicketProps = {
   passengerGender: string;
 };
 
-export default function FlightTicket({
+export const FlightTicket = ({
   flightId,
   flightType,
   flightRecordLocator,
@@ -21,7 +21,7 @@ export default function FlightTicket({
   passengerName,
   passengerGender,
   passengerDOB,
-}: FlightTicketProps) {
+}: FlightTicketProps) => {
   const { data, isLoading, error } = useFlightQuery({
     flightId: String(flightId),
   });
@@ -128,7 +128,7 @@ export default function FlightTicket({
       </CardContent>
     </Card>
   );
-}
+};
 
 FlightTicket.SubTitle = ({ subTitle }: { subTitle: string }) => {
   return (

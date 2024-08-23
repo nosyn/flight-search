@@ -1,4 +1,4 @@
-import { API_TICKET } from '@/lib/constants';
+import { API_TICKETS } from '@/lib/constants';
 import { HttpErrorResponse } from '@/lib/react-query-client';
 import { ReserveFlightTicket, Ticket, TicketSchema } from '@/schemas';
 import { useMutation } from '@tanstack/react-query';
@@ -7,7 +7,7 @@ export const useReserveTicketMutation = () => {
   return useMutation<Ticket, HttpErrorResponse, ReserveFlightTicket>({
     mutationKey: ['reserveFlightTicket'],
     mutationFn: async (data) => {
-      const response = await fetch(API_TICKET, {
+      const response = await fetch(API_TICKETS, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

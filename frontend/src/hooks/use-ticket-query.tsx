@@ -1,5 +1,5 @@
 import { toast } from '@/components/ui/use-toast';
-import { API_TICKET } from '@/lib/constants';
+import { API_TICKETS } from '@/lib/constants';
 import { HttpErrorResponse } from '@/lib/react-query-client';
 import { Ticket, TicketSchema } from '@/schemas';
 import { useQuery } from '@tanstack/react-query';
@@ -16,7 +16,7 @@ export const useTicketQuery = ({ ticketId }: UseGetTicketArgs) => {
     queryKey: ['ticket', ticketId],
     retry: false,
     queryFn: async () => {
-      const response = await fetch(`${API_TICKET}/${ticketId}`, {
+      const response = await fetch(`${API_TICKETS}/${ticketId}`, {
         credentials: 'include',
       });
 

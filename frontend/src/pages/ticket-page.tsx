@@ -1,4 +1,4 @@
-import FlightTicket from '@/components/ticket/flight-ticket';
+import { FlightTicket } from '@/components/tickets/flight-ticket';
 import { useTicketQuery } from '@/hooks/use-ticket-query';
 import { useSearchQuery } from '@/hooks/use-search-query';
 import { Navigate } from 'react-router-dom';

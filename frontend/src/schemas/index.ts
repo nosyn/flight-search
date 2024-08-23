@@ -66,6 +66,9 @@ export const TicketSchema = z.object({
 });
 export type Ticket = z.infer<typeof TicketSchema>;
 
+export const TicketsSchema = TicketSchema.array();
+export type Tickets = z.infer<typeof TicketsSchema>;
+
 export const MeSchema = z.object({
   id: z.number(),
   clerk_id: z.string(),

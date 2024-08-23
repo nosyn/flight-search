@@ -85,9 +85,7 @@ export const getTicket = async (req: Request, res: Response) => {
     const ticketId = parseInt(req.params.id);
 
     if (!ticketId) {
-      res.status(400).json({
-        message: `Invalid ticket id parameter.`,
-      });
+      res.status(400).send(`Invalid ticket id parameter.`);
       return;
     }
 
@@ -99,9 +97,7 @@ export const getTicket = async (req: Request, res: Response) => {
     });
 
     if (!ticket) {
-      res.status(400).json({
-        message: `Ticket not found.`,
-      });
+      res.status(400).send(`Ticket not found.`);
       return;
     }
 
@@ -111,9 +107,7 @@ export const getTicket = async (req: Request, res: Response) => {
 
     if (!payment) {
       // Note: Maybe we can create a payment intent here and redirect the user to the payment page. For now, we will just return an error.
-      return res.status(400).json({
-        message: 'No payment method found for this ticket.',
-      });
+      return res.status(400).send('No payment method found for this ticket.');
     }
 
     if (payment.paymentStatus) {
@@ -138,11 +132,9 @@ export const getTicket = async (req: Request, res: Response) => {
     }
 
     // Case 2: Navigate to payment page
-    return res.status(402).json({
-      message: 'You have not paid for the ticket.',
-    }); //
+    return res.status(402).send('You have not paid for the ticket.'); //
   } catch (error) {
     logger.error('getTicket: ', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).send('Internal server error');
   }
 };

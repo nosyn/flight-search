@@ -43,6 +43,7 @@ export type ReserveFlightTicket = z.infer<typeof ReserveFlightTicketSchema>;
 
 export const TicketSchema = z.object({
   id: z.number(),
+  clerkId: z.string(),
   departureFlightId: z.number(),
   departureFlightType: FlightTypeSchema,
   departureFlightPrice: z.number(),
@@ -56,7 +57,6 @@ export const TicketSchema = z.object({
   passengerName: z.string(),
   passengerDOB: z.string(),
   passengerGender: z.string(),
-  payment_status: z.boolean(),
 });
 export type Ticket = z.infer<typeof TicketSchema>;
 
@@ -73,3 +73,6 @@ export const PaymentIntentSchema = z.object({
   }),
 });
 export type PaymentIntent = z.infer<typeof PaymentIntentSchema>;
+
+export const FlightsScheduleSchema = z.enum(['departure', 'return']);
+export type FlightsSchedule = z.infer<typeof FlightsScheduleSchema>;

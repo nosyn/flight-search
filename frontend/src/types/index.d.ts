@@ -1,1 +1,0 @@
-type FlightsScheduleType = 'departure' | 'return';

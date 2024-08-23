@@ -7,14 +7,15 @@ import {
 } from '@/lib/utils';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { Calendar } from '../ui/calendar';
-import { FlightCard, FlightCardProps } from './flight-card';
+import { FlightCard, FlightCardProps } from '../flights/flight-card';
+import { FlightsSchedule } from '@/schemas';
 
 type ChooseFlightProps = {
-  type: FlightsScheduleType;
+  type: FlightsSchedule;
   onSelectTicket: FlightCardProps['selectTicket'];
 };
 
-export const FlightsSchedule = ({
+export const FlightsScheduleForm = ({
   type,
   onSelectTicket,
 }: ChooseFlightProps) => {
@@ -72,11 +73,12 @@ export const FlightsSchedule = ({
     return (
       <div>
         <p className='text-xl font-semibold'>
-          Couldn't find any flights for date {date}. Please search for new one
+          Couldn't find any {isDeparture ? 'departure' : 'return'} flights on
+          date {date}. Please select new one
         </p>
         <Calendar
           mode='single'
-          selected={formattedDateFrom}
+          selected={convertToDateFromSearchParam(date || '') || new Date()}
           onSelect={(d) => {
             if (d) {
               const newDate = getSearchParamsFormattedDate(d);
@@ -101,9 +103,7 @@ export const FlightsSchedule = ({
   return (
     <div>
       <div className='font-bold mb-4'>
-        {type === 'departure'
-          ? 'Select departure flights'
-          : 'Select return flights'}
+        {isDeparture ? 'Select departure flights' : 'Select return flights'}
       </div>
       <div className='text-xl font-semibold'>Date: {date}</div>
       <div className='max-h-[540px] overflow-auto pr-6 border-2'>

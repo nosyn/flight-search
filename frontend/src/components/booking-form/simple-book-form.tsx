@@ -1,7 +1,7 @@
 import { useFormContext } from 'react-hook-form';
 import { FlightTicketForm } from '.';
 import { SelectedFlightCard } from '../flights/selected-flight-card';
-import { FlightsSchedule } from '../flights/flights-schedule';
+import { FlightsScheduleForm } from './flights-schedule-form';
 import { Separator } from '../ui/separator';
 import { TravelerInfo } from './traveler-info-form';
 
@@ -21,7 +21,7 @@ export const SimpleBookingForm = () => {
         />
       ) : (
         <div>
-          <FlightsSchedule
+          <FlightsScheduleForm
             type={'departure'}
             onSelectTicket={({ flight, flightType }) => {
               form.clearErrors('departureFlight');
@@ -45,7 +45,7 @@ export const SimpleBookingForm = () => {
         />
       ) : (
         <div>
-          <FlightsSchedule
+          <FlightsScheduleForm
             type='return'
             onSelectTicket={({ flight, flightType }) => {
               form.clearErrors('returnFlight');

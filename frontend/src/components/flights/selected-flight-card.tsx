@@ -4,7 +4,7 @@ import {
   getDateTimeFromTimestamp,
   getDurationBetweenTimestamps,
 } from '@/lib/utils';
-import { Flight, FlightType } from '@/schemas';
+import { Flight, FlightsSchedule, FlightType } from '@/schemas';
 import {
   BriefcaseBusinessIcon,
   ChevronsUpDown,
@@ -23,7 +23,7 @@ import { useState } from 'react';
 type SelectedFlightCardProps = {
   flight: Flight;
   flightType: FlightType;
-  type: FlightsScheduleType;
+  type: FlightsSchedule;
   onEdit: () => void;
 };
 

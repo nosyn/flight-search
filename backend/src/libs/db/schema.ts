@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import {
   integer,
   pgTable,
@@ -83,6 +84,10 @@ export const ticketsTable = pgTable('tickets_table', {
   passengerGender: genderEnum('passenger_gender'),
 });
 
+export const ticketsRelation = relations(ticketsTable, ({ one }) => ({
+  payment: one(paymentTable),
+}));
+
 /**
  * Users Table
  */
@@ -103,3 +108,10 @@ export const paymentTable = pgTable('payment_table', {
     .notNull()
     .references(() => ticketsTable.id),
 });
+
+export const paymentRelations = relations(paymentTable, ({ one }) => ({
+  user: one(ticketsTable, {
+    fields: [paymentTable.ticketId],
+    references: [ticketsTable.id],
+  }),
+}));

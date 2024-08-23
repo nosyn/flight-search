@@ -8,10 +8,10 @@
   },
   "scripts": {
     "dev": "tsx --watch src/main.ts",
+    "start": "node dist/main.js",
     "build": "npm run build:server && npm run build:scripts",
     "build:server": "rimraf dist && pkgroll --target=esnext",
     "build:scripts": "rimraf dist-scripts && npx pkgroll --dist=dist-scripts --src=./scripts --target=esnext",
-    "start": "node dist/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate",
@@ -42,7 +42,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^22.3.0",
+    "@types/node": "^22.5.0",
     "drizzle-kit": "^0.24.0",
     "pkgroll": "^2.4.2",
     "rimraf": "^6.0.1",

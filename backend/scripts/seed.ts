@@ -1,12 +1,16 @@
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { faker } from '@faker-js/faker';
-import { DB_CONNECTION_STRING } from '../src/libs/constants';
 import * as schema from '../src/libs/db/schema';
 
 const MAX_AIRPORTS = 10;
 const MAX_FLIGHTS_PER_DAY_FROM_EACH_AIRPORT_TO_OTHER_AIRPORT = 10;
 const IN_THE_NEXT_X_MONTH = 2;
+const DB_CONNECTION_STRING =
+  process.env.NODE_ENV === 'production' && process.env.DB_CONNECTION_STRING
+    ? process.env.DB_CONNECTION_STRING
+    : `postgresql://db_user:db_password@$localhost:5432/flight-search-db`;
+
 interface Flight {
   departureTime: Date;
   arrivalTime: Date;

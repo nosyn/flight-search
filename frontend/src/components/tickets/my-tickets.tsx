@@ -9,51 +9,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useTicketsQuery } from '@/hooks/use-tickets-query';
-
-const invoices = [
-  {
-    invoice: 'INV001',
-    paymentStatus: 'Paid',
-    totalAmount: '$250.00',
-    paymentMethod: 'Credit Card',
-  },
-  {
-    invoice: 'INV002',
-    paymentStatus: 'Pending',
-    totalAmount: '$150.00',
-    paymentMethod: 'PayPal',
-  },
-  {
-    invoice: 'INV003',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$350.00',
-    paymentMethod: 'Bank Transfer',
-  },
-  {
-    invoice: 'INV004',
-    paymentStatus: 'Paid',
-    totalAmount: '$450.00',
-    paymentMethod: 'Credit Card',
-  },
-  {
-    invoice: 'INV005',
-    paymentStatus: 'Paid',
-    totalAmount: '$550.00',
-    paymentMethod: 'PayPal',
-  },
-  {
-    invoice: 'INV006',
-    paymentStatus: 'Pending',
-    totalAmount: '$200.00',
-    paymentMethod: 'Bank Transfer',
-  },
-  {
-    invoice: 'INV007',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$300.00',
-    paymentMethod: 'Credit Card',
-  },
-];
+import { Button } from '../ui/button';
 
 export const MyTickets = () => {
   const { data: tickets, error, isLoading } = useTicketsQuery();
@@ -66,8 +22,6 @@ export const MyTickets = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log('data: ', tickets);
-
   return (
     <Table>
       <TableCaption>A list of your recent tickets.</TableCaption>
@@ -76,29 +30,43 @@ export const MyTickets = () => {
           <TableHead className='w-[100px]'>Ticket ID</TableHead>
           <TableHead>Departure Flight ID</TableHead>
           <TableHead>Return Flight ID</TableHead>
+          <TableHead>Payment Status</TableHead>
           <TableHead className='text-right'>Total Amount</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {tickets.map((tickets) => (
-          <TableRow key={tickets.id}>
-            <TableCell className='font-medium'>{tickets.id}</TableCell>
-            <TableCell>{tickets.departureFlightId}</TableCell>
-            <TableCell>{tickets.returnFlightId}</TableCell>
+        {tickets.map((ticket) => (
+          <TableRow key={ticket.id}>
+            <TableCell className='font-medium'>{ticket.id}</TableCell>
+            <TableCell>{ticket.departureFlightId}</TableCell>
+            <TableCell>{ticket.returnFlightId}</TableCell>
+            <TableCell>
+              {ticket.payment.paymentStatus ? (
+                <Button asChild variant='link' size='sm' className='p-0'>
+                  <a href={`/ticket?ticketId=${ticket.id}`} target='_blank'>
+                    Paid
+                  </a>
+                </Button>
+              ) : (
+                <Button asChild variant='link' size='sm' className='p-0'>
+                  <a href={`/payment?ticketId=${ticket.id}`} target='_blank'>
+                    Unpaid
+                  </a>
+                </Button>
+              )}
+            </TableCell>
             <TableCell className='text-right'>
               {new Intl.NumberFormat('th-TH', {
                 style: 'currency',
                 currency: 'THB',
-              }).format(
-                tickets.departureFlightPrice + tickets.returnFlightPrice
-              )}
+              }).format(ticket.departureFlightPrice + ticket.returnFlightPrice)}
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
+          <TableCell colSpan={4}>Total Paid</TableCell>
           <TableCell className='text-right'>
             {new Intl.NumberFormat('th-TH', {
               style: 'currency',
@@ -106,7 +74,11 @@ export const MyTickets = () => {
             }).format(
               tickets.reduce(
                 (acc, ticket) =>
-                  acc + ticket.departureFlightPrice + ticket.returnFlightPrice,
+                  ticket.payment.paymentStatus
+                    ? acc +
+                      ticket.departureFlightPrice +
+                      ticket.returnFlightPrice
+                    : acc,
                 0
               )
             )}
